@@ -34,8 +34,8 @@ class Page(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    test = models.CharField(max_length=30, blank = True)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+    description = models.CharField(max_length=256, blank = True)
+    picture = models.ImageField(upload_to='profile_images', default = 'profile_images/default/default_profile_picture.png')
 
     def __str__(self):
         return self.user.username

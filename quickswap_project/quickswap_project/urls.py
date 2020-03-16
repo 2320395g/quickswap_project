@@ -26,7 +26,7 @@ class MyRegistrationView(RegistrationView):
         return reverse('quickswap:register_profile')
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.home, name='home'),
     path('quickswap/', include('quickswap.urls')),
     path('admin/', admin.site.urls),
     path('accounts/register/',MyRegistrationView.as_view(),name='registration_register'),

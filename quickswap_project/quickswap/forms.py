@@ -36,14 +36,6 @@ class PageForm(forms.ModelForm):
 
         return cleaned_data
 
-class TestForm(RegistrationForm):
-    test = forms.CharField(max_length=30, required = False)
-    #desc = forms.CharField(max_length=30)
-    #picture = forms.ImageField()
-    #class Meta:
-
-        #model = UserProfile
-        #fields = ('website', 'picture')
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -55,4 +47,4 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('test', 'picture',)
+        fields = ('description', 'picture',)

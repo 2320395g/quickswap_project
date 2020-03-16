@@ -30,10 +30,10 @@ ALLOWED_HOSTS = []
 REGISTRATION_OPEN = True
 REGISTRATION_AUTO_LOGIN = True
 ACCOUNT_ACTIVATION_DAYS = 7
-LOGIN_REDIRECT_URL = 'quickswap:index'
+LOGIN_REDIRECT_URL = 'quickswap:home'
 LOGIN_URL = 'auth_login'
 
-SIMPLE_BACKEND_REDIRECT_URL = 'quickswap:index'
+SIMPLE_BACKEND_REDIRECT_URL = 'quickswap:home'
 #REGISTRATION_FORM = 'quickswap.forms.TestForm'
 
 

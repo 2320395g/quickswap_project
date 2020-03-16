@@ -8,8 +8,10 @@ from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from datetime import datetime
 from django.contrib.auth.models import User
 from quickswap.models import UserProfile
+from django.views.generic import View
+from django.utils.decorators import method_decorator
 
-def index(request):
+def home(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
@@ -25,7 +27,7 @@ def index(request):
 
     visitor_cookie_handler(request)
 
-    return render(request, 'quickswap/index.html', context=context_dict)
+    return render(request, 'quickswap/home.html', context=context_dict)
 
 def about(request):
     # Spoiler: now you DO need a context dictionary!
@@ -59,7 +61,7 @@ def add_category(request):
 
         if form.is_valid():
             form.save(commit=True)
-            return redirect(reverse('quickswap:index'))
+            return redirect(reverse('quickswap:home'))
         else:
             print(form.errors)
 
@@ -74,7 +76,7 @@ def add_page(request, category_name_slug):
 
     # You cannot add a page to a Category that does not exist... DM
     if category is None:
-        return redirect(reverse('quickswap:index'))
+        return redirect(reverse('quickswap:home'))
 
     form = PageForm()
 
@@ -132,8 +134,61 @@ def register_profile(request):
             user_profile.user = request.user
             user_profile.save()
 
-            return redirect(reverse('quickswap:index'))
+            return redirect(reverse('quickswap:home'))
         else:
             print(form.errors)
     context_dict = {'form': form}
     return render(request, 'quickswap/profile_registration.html', context_dict)
+
+
+class ProfileView(View):
+    def get_user_details(self, username):
+        try:
+            user=User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
+
+        user_profile = UserProfile.objects.get_or_create(user=user)[0]
+        form = UserProfileForm({'description': user_profile.description,'picture': user_profile.picture})
+
+        return(user, user_profile, form)
+
+
+    @method_decorator(login_required)
+    def get(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except TypeError:
+            return redirect(reverse('quickswap:home'))
+
+        context_dict={'user_profile': user_profile,'selected_user': user,'form': form}
+
+        return render(request,'quickswap/user.html', context_dict)
+
+    @method_decorator(login_required)
+    def post(self, request, username):
+        try:
+            (user, user_profile, form) = self.get_user_details(username)
+        except TypeError:
+            return redirect(reverse('quickswap:home'))
+
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+
+        if form.is_valid():
+            form.save(commit=True)
+            returnredirect('quickswap:user', user.username)
+        else:
+            print(form.errors)
+
+        context_dict = {'user_profile': user_profile,'selected_user': user,'form': form}
+
+        return render(request,'quickswap/user.html', context_dict)
+
+class AllUsersView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        profiles = UserProfile.objects.all()
+
+        return render(request,
+                'quickswap/allusers.html',
+                {'user_profile_list': profiles})

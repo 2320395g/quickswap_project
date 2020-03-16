@@ -13,12 +13,11 @@
             <h2 class="h2">
             {% if user.is_authenticated %}
                 howdy {{ user.username }}!
-    
+
                 <img src="{{ MEDIA_URL }}{{ user.userprofile.picture }}"
                      width="300"
                      height="300"
                      alt="{{ user.username }}'s profile image"/>
-                <br>Id : {{ user.first_name }}
                 <form method="post"action="."enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<inputtype="submit"value="Update"/></form>
             {% else %}
                 hey there partner!
