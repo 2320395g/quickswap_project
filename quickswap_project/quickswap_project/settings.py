@@ -18,8 +18,6 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'sq_z*m=yr)aiu$9lyzf@)&-!o(yjs=)9igwhuco$d7@a3jed=@'
@@ -31,12 +29,20 @@ ALLOWED_HOSTS = []
 
 REGISTRATION_OPEN = True
 REGISTRATION_AUTO_LOGIN = True
+ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_REDIRECT_URL = 'quickswap:index'
 LOGIN_URL = 'auth_login'
+
+SIMPLE_BACKEND_REDIRECT_URL = 'quickswap:index'
+#REGISTRATION_FORM = 'quickswap.forms.TestForm'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'quickswap',
-    'registration',
+
 ]
 
 MIDDLEWARE = [
@@ -62,7 +68,7 @@ ROOT_URLCONF = 'quickswap_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR, ],
+        'DIRS': [TEMPLATE_DIR, os.path.join(BASE_DIR, 'templates/quickswap')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,8 +86,6 @@ WSGI_APPLICATION = 'quickswap_project.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -91,8 +95,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -115,9 +117,9 @@ PASSWORD_HASHERS=['django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
                 'django.contrib.auth.hashers.BCryptPasswordHasher',
                 'django.contrib.auth.hashers.PBKDF2PasswordHasher',
                 'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',]
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
 
+
+# Internationalization
 LANGUAGE_CODE = 'en-uk'
 
 TIME_ZONE = 'UTC'
@@ -130,8 +132,6 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR, ]
 

@@ -14,16 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.urls import include
+from django.urls import path, include, reverse
 from quickswap import views
 from django.conf import settings
 from django.conf.urls.static import static
+from registration.backends.simple.views import RegistrationView
+#from quickswap.regbackend import MyRegistrationView
+
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user):
+        return reverse('quickswap:register_profile')
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('quickswap/', include('quickswap.urls')),
-    # 3 - The above maps any URLs starting with quickswap/ to be handled by quickswap.
     path('admin/', admin.site.urls),
-    path('accounts/', include('registration.backends.simple.urls')),
+    path('accounts/register/',MyRegistrationView.as_view(),name='registration_register'),
+    path('accounts/', include('registration.backends.default.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,15 +6,22 @@ from django.contrib.auth.decorators import login_required
 from quickswap.models import Category, Page
 from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from datetime import datetime
+from django.contrib.auth.models import User
+from quickswap.models import UserProfile
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
+    #user_profile=UserProfile.objects.get_or_create(user=user)[0]
+    #form=UserProfileForm({'website': user_profile.website,'picture': user_profile.picture})
+
     context_dict = {}
     context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
+    context_dict['picture'] =
+
 
     visitor_cookie_handler(request)
 
@@ -110,3 +117,23 @@ def visitor_cookie_handler(request):
         request.session['last_visit'] = last_visit_cookie
 
     request.session['visits'] = visits
+
+
+
+@login_required
+def register_profile(request):
+    form = UserProfileForm()
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+
+            return redirect(reverse('quickswap:index'))
+        else:
+            print(form.errors)
+    context_dict = {'form': form}
+    return render(request, 'quickswap/profile_registration.html', context_dict)
