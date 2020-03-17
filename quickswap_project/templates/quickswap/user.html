@@ -18,6 +18,14 @@
     height="300"
     alt="{{ selected_user.username }}'s profile image"/>
     <br />
+      <div>
+        <p>Date Joined:
+        <br />  {{ user.date_joined|date:"D - d/m/Y" }}
+        <br />  {{ user.date_joined|timesince }} ago.
+        <br />Last Login:
+        <br />  {{ user.last_login|date:"D - d/m/Y" }}
+        <br />  {{ user.last_login|timesince }} ago.
+      </div>
     <div>
       {% if selected_user == user %}
       <form method="post"action="."enctype="multipart/form-data">
