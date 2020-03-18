@@ -55,6 +55,7 @@ class Trade(models.Model):
 
     NAME_MAX_LENGTH = 128
 
+    #user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length = NAME_MAX_LENGTH, unique=True)
     picture = models.ImageField(blank = False, upload_to='trade_images')
     category = models.CharField(max_length = 48, choices = CATEGORY_CHOICES)

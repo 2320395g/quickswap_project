@@ -69,6 +69,7 @@ def add_category(request):
 
 @login_required
 def add_trade(request):
+    #user = request.user
     form = TradeForm()
 
     if request.method == 'POST':
@@ -76,10 +77,10 @@ def add_trade(request):
 
         if form.is_valid():
             trade = form.save(commit=True)
+            #trade.user = user
             trade.save()
             return redirect(reverse('quickswap:home'))
         else:
-            print(form)
             print(form.errors)
 
     return render(request, 'quickswap/add_trade.html', {'form': form})
@@ -193,7 +194,8 @@ class ProfileView(View):
 
         if form.is_valid():
             form.save(commit=True)
-            returnredirect('quickswap:user', user.username)
+            print(user.username)
+            return redirect('quickswap:user', user.username)
         else:
             print(form.errors)
 

@@ -33,7 +33,7 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:home' %}">Home</a></li>
                         <li class="nav-item "><a class="nav-link" href="{% url 'quickswap:about' %}">About</a></li>
                         {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link"href="{% url 'quickswap:profile' user.username %}">My Profile</a></li>
+                        <li class="nav-item"><a class="nav-link"href="{% url 'quickswap:user' user.username %}">My Profile</a></li>
                         <li class="nav-item "><a class="nav-link" href="{% url 'quickswap:restricted' %}">Restricted</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/quickswap/">Logout</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:add_category' %}">Add Category</a></li>

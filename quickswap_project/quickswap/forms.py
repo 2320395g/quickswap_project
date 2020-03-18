@@ -39,6 +39,7 @@ class PageForm(forms.ModelForm):
         return cleaned_data
 
 class TradeForm(forms.ModelForm):
+    #user = forms.ForeignKey(widget=forms.HiddenInput())
     name = forms.CharField(max_length = 128, help_text="Please give your trade a name, try to be informative!")
     #picture = forms.ImageField()
     #category = forms.CharField()
@@ -50,6 +51,7 @@ class TradeForm(forms.ModelForm):
         model = Trade
         fields = ('name','picture','category',
             'quality','description','suggested_trage',)
+        #exclude = ('user',)
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
