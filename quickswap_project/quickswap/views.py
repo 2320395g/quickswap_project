@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from quickswap.models import Category, Page
-from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm, TradeForm
 from datetime import datetime
 from django.contrib.auth.models import User
 from quickswap.models import UserProfile
@@ -66,6 +66,23 @@ def add_category(request):
             print(form.errors)
 
     return render(request, 'quickswap/add_category.html', {'form': form})
+
+@login_required
+def add_trade(request):
+    form = TradeForm()
+
+    if request.method == 'POST':
+        form = TradeForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            trade = form.save(commit=True)
+            trade.save()
+            return redirect(reverse('quickswap:home'))
+        else:
+            print(form)
+            print(form.errors)
+
+    return render(request, 'quickswap/add_trade.html', {'form': form})
 
 @login_required
 def add_page(request, category_name_slug):
@@ -192,3 +209,15 @@ class AllUsersView(View):
         return render(request,
                 'quickswap/allusers.html',
                 {'user_profile_list': profiles})
+
+
+
+class ContactUsView(View):
+    def get(self, request):
+
+        return render(request, 'quickswap/contactus.html',)
+
+class HelpdeskView(View):
+    def get(self, request):
+
+        return render(request, 'quickswap/helpdesk.html',)

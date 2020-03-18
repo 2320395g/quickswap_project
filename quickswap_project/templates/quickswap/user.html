@@ -34,6 +34,8 @@
 
         <input type="submit"value="Update"/>
       </form>
+      <br />
+      <a class="btn btn-danger" href="{% url 'auth_password_change' %}">Change Password</a>
       {% else %}
       <p>
         Description: {{ user_profile.description }}

@@ -1,11 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
-from quickswap.models import Page, Category, UserProfile
+from quickswap.models import Page, Category, UserProfile, Trade
 from registration.forms import RegistrationForm
 
 
 
 # We could add these forms to views.py, but it makes sense to split them off into their own file.
+
+
 
 class CategoryForm(forms.ModelForm):
     name = forms.CharField(max_length=Category.NAME_MAX_LENGTH, help_text="Please enter the category name.")
@@ -36,6 +38,18 @@ class PageForm(forms.ModelForm):
 
         return cleaned_data
 
+class TradeForm(forms.ModelForm):
+    name = forms.CharField(max_length = 128, help_text="Please give your trade a name, try to be informative!")
+    #picture = forms.ImageField()
+    #category = forms.CharField()
+    #quality = forms.CharField()
+    description = forms.CharField(max_length = 256, help_text="Give your trade a description, let people know what it is and isn't!")
+    suggested_trage = forms.CharField(max_length = 128, help_text="Help people know what you might want in return!")
+
+    class Meta:
+        model = Trade
+        fields = ('name','picture','category',
+            'quality','description','suggested_trage',)
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())

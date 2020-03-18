@@ -13,4 +13,7 @@ urlpatterns = [
     path('register_profile/', views.register_profile, name='register_profile'),
     path('user/<username>/', views.ProfileView.as_view(), name='profile'),
     path('allusers/', views.AllUsersView.as_view(), name='allusers'),
+    path('contactus/', views.ContactUsView.as_view(), name='contactus'),
+    path('helpdesk/', views.HelpdeskView.as_view(), name='helpdesk'),
+    path('add_trade/', views.add_trade, name='add_trade'),
 ]

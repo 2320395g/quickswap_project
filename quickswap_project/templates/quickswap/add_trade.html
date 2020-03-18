@@ -1,0 +1,30 @@
+{% extends 'quickswap/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Add a Trade
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+    <div class="container">
+        <h1 class="jumbotron-heading">Add a Trade</h1>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <form role="form" id="trade_form" method="post" action="{% url 'quickswap:add_trade' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+                {{ field.help_text }}<br />
+                {{ field }}<br />
+                {{ field.errors }}
+                <div class="p-2"></div>
+            {% endfor %}
+            <br />
+            <button class="btn btn-primary" type="submit" name="submit">Add Trade</button>
+            <div class="p-5"></div>
+        </form>
+    </div>
+</div>
+{% endblock %}

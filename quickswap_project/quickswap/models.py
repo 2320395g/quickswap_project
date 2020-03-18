@@ -2,6 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 
+
 class Category(models.Model):
     NAME_MAX_LENGTH = 128
 
@@ -31,6 +32,43 @@ class Page(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Trade(models.Model):
+
+    CATEGORY_CHOICES = (
+        ('art','Art'),
+        ('books', 'Books'),
+        ('clothes', 'Clothes'),
+        ('electronics', 'Electronics'),
+        ('furniture', 'Furniture'),
+        ('toys', 'Toys'),
+        ('other', 'Other'),
+    )
+    QUALITY_CHOICES = (
+        ('new', 'New'),
+        ('good','Good'),
+        ('fair','Fair'),
+        ('slightly-damaged', 'Slightly Damaged'),
+        ('battle-scarred', 'Battle Scarred'),
+    )
+
+    NAME_MAX_LENGTH = 128
+
+    name = models.CharField(max_length = NAME_MAX_LENGTH, unique=True)
+    picture = models.ImageField(blank = False, upload_to='trade_images')
+    category = models.CharField(max_length = 48, choices = CATEGORY_CHOICES)
+    quality = models.CharField(max_length = 48, choices = QUALITY_CHOICES)
+    description = models.CharField(max_length = 256, blank = False)
+    suggested_trage = models.CharField(max_length = 128, blank = False)
+
+    def __str__(self):
+        return self.name
+    '''
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Trade, self).save(*args, **kwargs)
+        '''
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

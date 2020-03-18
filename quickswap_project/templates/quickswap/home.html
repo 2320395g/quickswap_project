@@ -8,23 +8,19 @@
 {% block body_block %}
 <div class="jumbotron p-4">
     <div class="container">
-        <h1 class="jumbotron-heading">quickswap says...</h1>
+      {% if user.is_authenticated %}
+        <h1 class="jumbotron-heading">Hello {{ user.username }}! Ready to trade?</h1>
         <div>
-            <h2 class="h2">
-            {% if user.is_authenticated %}
-                howdy {{ user.username }}!
 
-                <img src="{{ MEDIA_URL }}{{ user.userprofile.picture }}"
-                     width="300"
-                     height="300"
-                     alt="{{ user.username }}'s profile image"/>
-                <form method="post"action="."enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<inputtype="submit"value="Update"/></form>
-            {% else %}
-                hey there partner!
-            {% endif %}
-            </h2>
-            <strong>{{ boldmessage }}</strong>
+            <img src="{{ MEDIA_URL }}{{ user.userprofile.picture }}"
+                 width="200"
+                 height="200"
+                 alt="{{ user.username }}'s profile image"/>
         </div>
+      {% else %}
+          <h1 class="jumbotron-heading">  Welcome to Quickswap!</h1>
+      {% endif %}
+
     </div>
 </div>
 
@@ -70,5 +66,4 @@
     </div>
 </div>
 
-<img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" />
 {% endblock %}
