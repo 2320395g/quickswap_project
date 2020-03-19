@@ -45,12 +45,12 @@ class TradeForm(forms.ModelForm):
     category = forms.ChoiceField(choices = Trade.CATEGORY_CHOICES,help_text="Please choose a category for your item of trade.")
     quality = forms.ChoiceField(choices = Trade.QUALITY_CHOICES,help_text="Please choose a level of quality for your item of trade.")
     description = forms.CharField(max_length = 256, help_text="Give your trade a description, let people know what it is and isn't!")
-    suggested_trage = forms.CharField(max_length = 128, help_text="Help people know what you might want in return!")
+    suggested_trade = forms.CharField(max_length = 128, help_text="Help people know what you might want in return!")
 
     class Meta:
         model = Trade
         fields = ('name','picture','category',
-            'quality','description','suggested_trage',)
+            'quality','description','suggested_trade',)
         #exclude = ('user',)
 
 class UserForm(forms.ModelForm):
