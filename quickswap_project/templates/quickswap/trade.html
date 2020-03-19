@@ -1,0 +1,35 @@
+{% extends 'quickswap/base.html' %}
+{% load staticfiles %}
+{% block title_block %}
+    Trade for {{ selected_trade.name }}.
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+  <div class="container">
+    <h1 class="jumbotron-heading">{{ selected_trade.name }}</h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <img src="{{ MEDIA_URL }}{{ selected_trade.picture }}"
+    width="300"
+    height="300"
+    alt="Picture of {{ selected_trade.name }}"/>
+    <br />
+    <div>
+      <p>
+        Trader : <a href="{% url 'quickswap:user' selected_trade.user.username %}">
+        {{ selected_trade.user.username }}
+        </a> <br />
+        Category: {{ selected_trade.category }} <br />
+        Quality: {{ selected_trade.quality }} <br />
+        Description: {{ selected_trade.description }} <br />
+        Suggested Trade: {{ selected_trade.suggested_trade }}
+
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

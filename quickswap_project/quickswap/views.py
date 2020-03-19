@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from quickswap.models import Category, Page
+from quickswap.models import Category, Page, Trade
 from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm, TradeForm
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -77,6 +77,7 @@ def add_trade(request):
 
         if form.is_valid():
             trade = form.save(commit=True)
+            trade.user = request.user
             #trade.user = user
             trade.save()
             return redirect(reverse('quickswap:home'))
@@ -203,14 +204,36 @@ class ProfileView(View):
 
         return render(request,'quickswap/user.html', context_dict)
 
+class TradeView(View):
+
+
+    def get(self, request, trade_name_slug):
+        context_dict = {}
+        try:
+            trade = Trade.objects.get(slug=trade_name_slug)
+            context_dict['selected_trade'] = trade
+        except Category.DoesNotExist:
+            context_dict['selected_trade'] = None
+
+        return render(request, 'quickswap/trade.html', context_dict)
+
+
 class AllUsersView(View):
-    @method_decorator(login_required)
     def get(self, request):
         profiles = UserProfile.objects.all()
 
         return render(request,
                 'quickswap/allusers.html',
                 {'user_profile_list': profiles})
+
+class AllTradesView(View):
+    @method_decorator(login_required)
+    def get(self, request):
+        trades = Trade.objects.all()
+
+        return render(request,
+                'quickswap/alltrades.html',
+                {'trade_list': trades})
 
 
 

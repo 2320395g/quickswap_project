@@ -42,8 +42,8 @@ class TradeForm(forms.ModelForm):
     #user = forms.ForeignKey(widget=forms.HiddenInput())
     name = forms.CharField(max_length = 128, help_text="Please give your trade a name, try to be informative!")
     #picture = forms.ImageField()
-    #category = forms.CharField()
-    #quality = forms.CharField()
+    category = forms.ChoiceField(choices = Trade.CATEGORY_CHOICES,help_text="Please choose a category for your item of trade.")
+    quality = forms.ChoiceField(choices = Trade.QUALITY_CHOICES,help_text="Please choose a level of quality for your item of trade.")
     description = forms.CharField(max_length = 256, help_text="Give your trade a description, let people know what it is and isn't!")
     suggested_trage = forms.CharField(max_length = 128, help_text="Help people know what you might want in return!")
 

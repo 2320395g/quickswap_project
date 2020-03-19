@@ -16,4 +16,6 @@ urlpatterns = [
     path('contactus/', views.ContactUsView.as_view(), name='contactus'),
     path('helpdesk/', views.HelpdeskView.as_view(), name='helpdesk'),
     path('add_trade/', views.add_trade, name='add_trade'),
+    path('alltrades/', views.AllTradesView.as_view(), name='alltrades'),
+    path('trade/<slug:trade_name_slug>', views.TradeView.as_view(), name='trade'),
 ]
