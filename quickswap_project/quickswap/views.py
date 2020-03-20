@@ -15,15 +15,10 @@ def home(request):
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('-views')[:5]
 
-    #user_profile=UserProfile.objects.get_or_create(user=user)[0]
-    #form=UserProfileForm({'website': user_profile.website,'picture': user_profile.picture})
-
     context_dict = {}
     context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
     context_dict['pages'] = page_list
-    #context_dict['picture'] =
-
 
     visitor_cookie_handler(request)
 
@@ -37,35 +32,6 @@ def about(request):
 
     return render(request, 'quickswap/about.html', context=context_dict)
 
-def show_category(request, category_name_slug):
-    context_dict = {}
-
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
-
-        context_dict['pages'] = pages
-        context_dict['category'] = category
-    except Category.DoesNotExist:
-        context_dict['pages'] = None
-        context_dict['category'] = None
-
-    return render(request, 'quickswap/category.html', context=context_dict)
-
-@login_required
-def add_category(request):
-    form = CategoryForm()
-
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect(reverse('quickswap:home'))
-        else:
-            print(form.errors)
-
-    return render(request, 'quickswap/add_category.html', {'form': form})
 
 @login_required
 def add_trade(request):
@@ -86,35 +52,6 @@ def add_trade(request):
 
     return render(request, 'quickswap/add_trade.html', {'form': form})
 
-@login_required
-def add_page(request, category_name_slug):
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-    except:
-        category = None
-
-    # You cannot add a page to a Category that does not exist... DM
-    if category is None:
-        return redirect(reverse('quickswap:home'))
-
-    form = PageForm()
-
-    if request.method == 'POST':
-        form = PageForm(request.POST)
-
-        if form.is_valid():
-            if category:
-                page = form.save(commit=False)
-                page.category = category
-                page.views = 0
-                page.save()
-
-                return redirect(reverse('quickswap:show_category', kwargs={'category_name_slug': category_name_slug}))
-        else:
-            print(form.errors)  # This could be better done; for the purposes of TwD, this is fine. DM.
-
-    context_dict = {'form': form, 'category': category}
-    return render(request, 'quickswap/add_page.html', context=context_dict)
 
 @login_required
 def restricted(request):
@@ -224,9 +161,16 @@ class UserTradesView(View):
             return None
 
         return(user)
-        
-class TradeView(View):
 
+class CategoryView(View):
+    def get(self, request, category_name):
+        print('!!!', category_name)
+        return render(request,
+                'quickswap/category.html',
+                {'selected_category': category_name, 'trade_list': Trade.objects.filter(category = category_name.lower())})
+
+
+class TradeView(View):
     def get(self, request, trade_name_slug):
         context_dict = {}
         try:
@@ -236,6 +180,19 @@ class TradeView(View):
             context_dict['selected_trade'] = None
 
         return render(request, 'quickswap/trade.html', context_dict)
+
+class CategoriesView(View):
+
+    def get(self, request):
+        categories = {}
+        categories = dict(Trade.CATEGORY_CHOICES).values()
+
+
+        print('!!!', categories)
+        return render(request,
+                'quickswap/categories.html',
+                {'categories_list': categories})
+
 
 
 class AllUsersView(View):

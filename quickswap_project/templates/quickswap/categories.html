@@ -1,21 +1,36 @@
-<ul class="nav flex-column">
-{% if categories %}
-    {% for c in categories %}
-        {% if c == current_category %}
-        <li class="nav-item">
-            <a class="nav-link active" href="{% url 'quickswap:show_category' c.slug %}">
-                <span data-feather="archive"></span>{{ c.name }}
-            </a>
-        </li>
-        {% else %}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'quickswap:show_category' c.slug %}">
-                <span data-feather="archive"></span>{{ c.name }}
-            </a>
-        </li>
-        {% endif %}
-    {% endfor %}
-{% else %}
-    <li class="nav-item">There are no categories present.</li>
-{% endif %}
-</ul>
+{% extends 'quickswap/home.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+  Quickswap Categories
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+  <div class="container">
+    <h1 class="jumbotron-heading">All Categories</h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    {% if categories_list %}
+    <div class="panel-body">
+      <div class="list-group">
+        {% for list_category in categories_list %}
+          <div class="list-group-item">
+            <h4 class="list-group-item-heading">
+              <a href="{% url 'quickswap:category' list_category %}">
+                {{ list_category }}
+              </a>
+            </h4>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+      <p>Quickswap seems to have no categories, please contact support.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -33,9 +33,6 @@
                     <p class="card-text">
                     {% if categories %}
                     <ul class="list-group">
-                    {% for category in categories %}
-                        <li class="list-group-item"><a href="{% url 'quickswap:show_category' category.slug %}">{{ category.name }}</a></li>
-                    {% endfor %}
                     </ul>
                     {% else %}
                     <strong>There are no categories present.</strong>
