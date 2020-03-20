@@ -36,6 +36,8 @@ class Page(models.Model):
 
 class Trade(models.Model):
 
+    #If you want to include a category with a space in it, you might need to
+    #add a slug as one of their values is user as a url.
     CATEGORY_CHOICES = (
         ('art','Art'),
         ('books', 'Books'),
