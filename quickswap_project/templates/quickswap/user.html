@@ -7,7 +7,11 @@
 {% block body_block %}
 <div class="jumbotron p-4">
   <div class="container">
-    <h1 class="jumbotron-heading">{{ selected_user.username }}'s Profile</h1>
+    {% if selected_user == user %}
+      <h1 class="jumbotron-heading"> Your Profile </h1>
+    {% else %}
+      <h1 class="jumbotron-heading">{{ selected_user.username }}'s Profile</h1>
+    {% endif %}
   </div>
 </div>
 
@@ -28,18 +32,22 @@
       </div>
     <div>
       {% if selected_user == user %}
-      <form method="post"action="."enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
+        <form method="post"action="."enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
 
-        <input type="submit"value="Update"/>
-      </form>
-      <br />
-      <a class="btn btn-danger" href="{% url 'auth_password_change' %}">Change Password</a>
+          <input type="submit"value="Update"/>
+        </form>
+        <br />
+        <a class="btn btn-danger" href="{% url 'auth_password_change' %}">Change Password</a>
+        <br />
+        <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">My Trades</a>
       {% else %}
-      <p>
-        Description: {{ user_profile.description }}
-      </p>
+        <p>
+          Description: {{ user_profile.description }}
+        </p>
+        <br />
+        <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">Their Trades</a>
       {% endif %}
     </div>
   </div>

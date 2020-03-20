@@ -204,15 +204,35 @@ class ProfileView(View):
 
         return render(request,'quickswap/user.html', context_dict)
 
-class TradeView(View):
 
+class UserTradesView(View):
+    @method_decorator(login_required)
+    def get(self, request, username):
+        try:
+            user = self.get_user(username)
+        except TypeError:
+            return redirect(reverse('quickswap:home'))
+
+        return render(request,
+                'quickswap/usertrades.html',
+                {'selected_user': user, 'trade_list': Trade.objects.filter(user = user)})
+
+    def get_user(self, username):
+        try:
+            user=User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
+
+        return(user)
+        
+class TradeView(View):
 
     def get(self, request, trade_name_slug):
         context_dict = {}
         try:
             trade = Trade.objects.get(slug=trade_name_slug)
             context_dict['selected_trade'] = trade
-        except Category.DoesNotExist:
+        except Trade.DoesNotExist:
             context_dict['selected_trade'] = None
 
         return render(request, 'quickswap/trade.html', context_dict)
