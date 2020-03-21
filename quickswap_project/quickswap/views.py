@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from quickswap.models import Category, Page, Trade
-from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm, TradeForm
+from quickswap.models import Category, Page, Trade, Comment
+from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm, TradeForm, CommentForm
 from datetime import datetime
 from django.contrib.auth.models import User
 from quickswap.models import UserProfile
@@ -46,7 +46,7 @@ def add_trade(request):
             trade.user = request.user
             #trade.user = user
             trade.save()
-            return redirect(reverse('quickswap:home'))
+            return redirect('quickswap:trade', trade.slug)
         else:
             print(form.errors)
 
@@ -132,7 +132,6 @@ class ProfileView(View):
 
         if form.is_valid():
             form.save(commit=True)
-            print(user.username)
             return redirect('quickswap:user', user.username)
         else:
             print(form.errors)
@@ -140,6 +139,61 @@ class ProfileView(View):
         context_dict = {'user_profile': user_profile,'selected_user': user,'form': form}
 
         return render(request,'quickswap/user.html', context_dict)
+
+class TradeView(View):
+
+    def get_Trade_Details(self, trade_name_slug):
+        try:
+            trade = Trade.objects.get(slug=trade_name_slug)
+        except Trade.DoesNotExist:
+            return None
+
+        comments = Comment.objects.filter(trade = trade)
+        form = CommentForm()
+
+        return(trade, comments, form)
+
+    def get(self, request, trade_name_slug):
+        try:
+            (trade, comments, form) = self.get_Trade_Details(trade_name_slug)
+        except TypeError:
+            return redirect(reverse('quickswap:home'))
+
+        context_dict = {'selected_trade':trade,
+        'comment_list': comments,
+        'comment_form': form}
+
+        return render(request, 'quickswap/trade.html', context_dict)
+
+    @method_decorator(login_required)
+    def post(self, request, trade_name_slug):
+        print('!!!', trade_name_slug)
+        try:
+            (trade, comments, form) = self.get_Trade_Details(trade_name_slug)
+        except TypeError:
+            return redirect(reverse('quickswap:home'))
+
+        print(trade, comments, form)
+
+        form = CommentForm(request.POST, request.FILES)
+
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            print(request.user.id)
+            comment.trade = trade
+            print(trade)
+            form.save()
+            return redirect('quickswap:trade', trade_name_slug)
+        else:
+            print(form.errors)
+
+        context_dict = {'selected_trade':trade,
+        'comment_list': comments,
+        'comment_form': form}
+
+        return render(request, 'quickswap/trade.html', context_dict)
 
 
 class UserTradesView(View):
@@ -169,17 +223,6 @@ class CategoryView(View):
                 'quickswap/category.html',
                 {'selected_category': category_name, 'trade_list': Trade.objects.filter(category = category_name.lower())})
 
-
-class TradeView(View):
-    def get(self, request, trade_name_slug):
-        context_dict = {}
-        try:
-            trade = Trade.objects.get(slug=trade_name_slug)
-            context_dict['selected_trade'] = trade
-        except Trade.DoesNotExist:
-            context_dict['selected_trade'] = None
-
-        return render(request, 'quickswap/trade.html', context_dict)
 
 class CategoriesView(View):
 

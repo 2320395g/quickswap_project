@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from quickswap.models import Page, Category, UserProfile, Trade
+from quickswap.models import Page, Category, UserProfile, Trade, Comment
 from registration.forms import RegistrationForm
 
 
@@ -64,3 +64,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('description', 'picture',)
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text', 'picture')

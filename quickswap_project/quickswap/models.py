@@ -74,7 +74,18 @@ class Trade(models.Model):
     def __str__(self):
         return self.name
 
+class Comment(models.Model):
+     trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default = 1)
+     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+     text = models.TextField()
+     picture = models.ImageField(blank = True, upload_to='comment_images')
+     date_made = models.DateTimeField(auto_now_add=True)
 
+     class Meta:
+        ordering = ['date_made']
+
+     def __str__(self):
+        return (self.text + ' - ' + self.user.username)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

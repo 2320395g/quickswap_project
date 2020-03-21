@@ -30,6 +30,55 @@
 
       </p>
     </div>
+
+    <div class="container">
+      <div class="row">
+        {% if comment_list %}
+        <div class="panel-body">
+          <div class="list-group">
+            {% for list_comment in comment_list %}
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">
+                <img src="{{ MEDIA_URL }}{{ list_comment.user.userprofile.picture }}"
+                width="48"
+                height="48"
+                />
+                <a href="{% url 'quickswap:user' list_comment.user.username %}">
+                  {{ list_comment.user.username }}
+                </a> :
+                {% if list_comment.picture %}
+                <img src="{{ MEDIA_URL }}{{ list_comment.picture }}"
+                width="100"
+                height="100"
+                />
+                {% endif %}
+                <P> {{ list_comment.text }}</p>
+              </h4>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <p>There are currently no comment on this trade, why don't you make one? </p>
+        {% endif %}
+      </div>
+    </div>
+
+
+    <div class="container">
+      <div class="row">
+        <form role="form" id="comment_form" method="post" action="{% url 'quickswap:trade' selected_trade.slug %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% for field in comment_form.visible_fields %}
+              {{ field }}<br />
+              {{ field.errors }}
+          {% endfor %}
+          <br />
+          <button class="btn btn-primary" type="submit" name="submit">Add Comment</button>
+          <div class="p-5"></div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
