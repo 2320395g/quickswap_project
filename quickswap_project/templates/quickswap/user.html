@@ -1,5 +1,7 @@
 {% extends 'quickswap/base.html' %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
+
 {% block title_block %}
     Profile of {{ selected_user.username }}.
 {% endblock %}
@@ -34,9 +36,9 @@
       {% if selected_user == user %}
         <form method="post"action="."enctype="multipart/form-data">
           {% csrf_token %}
-          {{ form.as_p }}
+          {{ form | crispy }}
 
-          <input type="submit"value="Update"/>
+          <input class="btn btn-warning" type="submit"value="Update"/>
         </form>
         <br />
         <a class="btn btn-danger" href="{% url 'auth_password_change' %}">Change Password</a>

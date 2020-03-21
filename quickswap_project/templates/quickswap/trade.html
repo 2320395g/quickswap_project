@@ -1,5 +1,7 @@
 {% extends 'quickswap/base.html' %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
+
 {% block title_block %}
     Trade for {{ selected_trade.name }}.
 {% endblock %}
@@ -69,10 +71,7 @@
       <div class="row">
         <form role="form" id="comment_form" method="post" action="{% url 'quickswap:trade' selected_trade.slug %}" enctype="multipart/form-data">
           {% csrf_token %}
-          {% for field in comment_form.visible_fields %}
-              {{ field }}<br />
-              {{ field.errors }}
-          {% endfor %}
+          {{ comment_form | crispy }}
           <br />
           <button class="btn btn-primary" type="submit" name="submit">Add Comment</button>
           <div class="p-5"></div>

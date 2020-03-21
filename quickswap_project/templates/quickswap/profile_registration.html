@@ -1,5 +1,6 @@
 {% extends 'quickswap/base.html' %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 
 {% block title_block %}
   Register - Step 2
@@ -18,7 +19,7 @@
         action="{% url 'quickswap:register_profile' %}"
         enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form | crispy }}
         <button class="btn btn-primary" type="submit" name="submit">Submit</button>
       </form>
     </div>

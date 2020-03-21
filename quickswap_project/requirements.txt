@@ -1,5 +1,9 @@
 
 pip install -U django-registration-redux==2.2
 
+django-crispy-forms==1.9.0
+(pip install django-crispy-forms)
 
 Pillow==5.4.1
+
+bcrypt==3.1.7

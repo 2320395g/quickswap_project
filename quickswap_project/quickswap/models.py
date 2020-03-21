@@ -63,7 +63,7 @@ class Trade(models.Model):
     picture = models.ImageField(blank = False, upload_to='trade_images')
     category = models.CharField(max_length = 48, choices = CATEGORY_CHOICES)
     quality = models.CharField(max_length = 48, choices = QUALITY_CHOICES)
-    description = models.CharField(max_length = 256, blank = False)
+    description = models.TextField(blank = False)
     suggested_trade = models.CharField(max_length = 128, blank = False)
     slug = models.SlugField()
 
@@ -90,7 +90,7 @@ class Comment(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=256, blank = True)
-    picture = models.ImageField(upload_to='profile_images', default = 'profile_images/default/default_profile_picture.png')
+    picture = models.ImageField(upload_to='profile_images', blank = True, default = 'profile_images/default/default_profile_picture.png')
 
     def __str__(self):
         return self.user.username

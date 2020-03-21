@@ -1,4 +1,5 @@
 {% extends 'quickswap/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title_block %}
     Register
@@ -9,9 +10,7 @@
 
 <form method="post" action=".">
     {% csrf_token %}
-
-    {{ form.as_p }}
-
+    {{ form | crispy }}
     <input type="submit" value="Register" />
 </form>
 {% endblock %}
