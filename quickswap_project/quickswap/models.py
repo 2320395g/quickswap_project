@@ -61,12 +61,12 @@ class Trade(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, default = None, on_delete=models.CASCADE)
     name = models.CharField(max_length = NAME_MAX_LENGTH, unique=True)
-    #picture = models.ImageField(blank = False, upload_to='trade_images')
     category = models.CharField(max_length = 48, choices = CATEGORY_CHOICES)
     quality = models.CharField(max_length = 48, choices = QUALITY_CHOICES)
     description = models.TextField(blank = False)
     suggested_trade = models.CharField(max_length = 128, blank = False)
     slug = models.SlugField()
+    date_made = models.DateField(auto_now = True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -78,6 +78,10 @@ class Trade(models.Model):
 class Pictures(models.Model):
     trade = models.ForeignKey(Trade,on_delete=models.CASCADE, default=None)
     picture = models.ImageField(upload_to='trade_images')
+
+    #Need this otherwise it just adds an 's' in admin and displays it as Picturess
+    class Meta:
+        verbose_name_plural = "Pictures"
 
 class Comment(models.Model):
      trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default = None)

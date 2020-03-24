@@ -32,10 +32,13 @@
     <br />
     <div>
       <p>
+        Created On: {{ selected_trade.date_made|date:"jS F, Y" }} <br />
         Trader : <a href="{% url 'quickswap:user' selected_trade.user.username %}">
         {{ selected_trade.user.username }}
         </a> <br />
-        Category: {{ selected_trade.category }} <br />
+        Category: <a href="{% url 'quickswap:category' selected_trade.category %}">
+        {{ selected_trade.category }}
+        </a> <br />
         Quality: {{ selected_trade.quality }} <br />
         Description: {{ selected_trade.description }} <br />
         Suggested Trade: {{ selected_trade.suggested_trade }}
@@ -55,7 +58,6 @@
                 width="48"
                 height="48"
                 />
-
                 {% if list_comment.user == request.user %}
                   <a href="{% url 'quickswap:user' list_comment.user.username %}">
                     {{ list_comment.user.username }}
@@ -73,6 +75,7 @@
                   {% endif %}
                   :
                 {% endif %}
+                {{ list_comment.date_made|date:"d/m/y - G:i:s" }}
                 {% if list_comment.picture %}
                 <br />
                 <img src="{{ MEDIA_URL }}{{ list_comment.picture }}"

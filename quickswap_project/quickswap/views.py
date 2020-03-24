@@ -41,7 +41,7 @@ def about(request):
 def add_trade(request):
     #user = request.user
     form = TradeForm()
-    PictureFormSet = modelformset_factory(Pictures, form=PictureForm, extra=5)
+    PictureFormSet = modelformset_factory(Pictures, form=PictureForm, extra=5, min_num=1)
 
     if request.method == 'POST':
         form = TradeForm(request.POST, request.FILES)
