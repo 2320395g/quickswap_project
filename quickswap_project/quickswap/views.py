@@ -41,8 +41,7 @@ def about(request):
 def add_trade(request):
     #user = request.user
     form = TradeForm()
-    PictureFormSet = modelformset_factory(Pictures,
-                                        form=PictureForm, extra=3)
+    PictureFormSet = modelformset_factory(Pictures, form=PictureForm, extra=5)
 
     if request.method == 'POST':
         form = TradeForm(request.POST, request.FILES)
@@ -230,13 +229,15 @@ class UserTradesView(View):
         trades = Trade.objects.filter(user = user)
 
         #This prevents a referenced before assignment error from dict
-        dict = {}
+        picture_dict = {}
+        comment_dict = {}
         if trades.count() != 0:
             for trade in trades:
-                dict[trade.slug] =  (Pictures.objects.filter(trade = trade).first()).picture
+                comment_dict[trade] = Comment.objects.filter(trade = trade).count()
+                picture_dict[trade] =  (Pictures.objects.filter(trade = trade).first()).picture
             return render(request,
                     'quickswap/usertrades.html',
-                    {'selected_user': user, 'trade_list': trades,'pictures':dict })
+                    {'selected_user': user, 'trade_list': trades,'pictures':picture_dict, 'comment_num':comment_dict })
 
         else:
             return render(request,
@@ -256,14 +257,17 @@ class CategoryView(View):
 
         trades = Trade.objects.filter(category = category_name.lower())
 
-        dict = {}
+        picture_dict = {}
+        comment_dict = {}
         if trades.count() != 0:
             for trade in trades:
-                dict[trade.slug] =  (Pictures.objects.filter(trade = trade).first()).picture
+                comment_dict[trade] = Comment.objects.filter(trade = trade).count()
+                picture_dict[trade] =  (Pictures.objects.filter(trade = trade).first()).picture
         return render(request,
                 'quickswap/category.html',
                 {'selected_category': category_name,
-                'trade_list': trades, 'pictures': dict})
+                'trade_list': trades, 'pictures': picture_dict,
+                 'comment_num':comment_dict })
 
 
 class CategoriesView(View):
@@ -290,13 +294,15 @@ class AllTradesView(View):
     @method_decorator(login_required)
     def get(self, request):
         trades = Trade.objects.all()
-        dict = {}
+        picture_dict = {}
+        comment_dict = {}
         if trades.count() != 0:
             for trade in trades:
-                dict[trade.slug] =  (Pictures.objects.filter(trade = trade).first()).picture
+                comment_dict[trade] = Comment.objects.filter(trade = trade).count()
+                picture_dict[trade] = (Pictures.objects.filter(trade = trade).first()).picture
         return render(request,
                 'quickswap/alltrades.html',
-                {'trade_list': trades, 'pictures': dict})
+                {'trade_list': trades, 'pictures': picture_dict, 'comment_num':comment_dict })
 
 
 class ContactUsView(View):
