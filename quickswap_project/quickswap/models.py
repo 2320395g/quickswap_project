@@ -3,6 +3,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.conf import settings
 
+
 class Category(models.Model):
     NAME_MAX_LENGTH = 128
 
@@ -58,9 +59,9 @@ class Trade(models.Model):
     NAME_MAX_LENGTH = 128
 
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default = 1, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, default = None, on_delete=models.CASCADE)
     name = models.CharField(max_length = NAME_MAX_LENGTH, unique=True)
-    picture = models.ImageField(blank = False, upload_to='trade_images')
+    #picture = models.ImageField(blank = False, upload_to='trade_images')
     category = models.CharField(max_length = 48, choices = CATEGORY_CHOICES)
     quality = models.CharField(max_length = 48, choices = QUALITY_CHOICES)
     description = models.TextField(blank = False)
@@ -74,8 +75,12 @@ class Trade(models.Model):
     def __str__(self):
         return self.name
 
+class Pictures(models.Model):
+    trade = models.ForeignKey(Trade,on_delete=models.CASCADE, default=None)
+    picture = models.ImageField(upload_to='trade_images')
+
 class Comment(models.Model):
-     trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default = 1)
+     trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default = None)
      user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
      text = models.TextField()
      picture = models.ImageField(blank = True, upload_to='comment_images')

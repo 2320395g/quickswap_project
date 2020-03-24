@@ -3,13 +3,17 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from quickswap.models import Category, Page, Trade, Comment
-from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm, TradeForm, CommentForm
+from quickswap.models import Category, Page, Trade, Comment, Pictures
+from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm, TradeForm, CommentForm, PictureForm
 from datetime import datetime
 from django.contrib.auth.models import User
 from quickswap.models import UserProfile
 from django.views.generic import View
 from django.utils.decorators import method_decorator
+from django.views.generic.edit import DeleteView
+from django.forms import modelformset_factory
+from django.contrib import messages
+
 
 def home(request):
     category_list = Category.objects.order_by('-likes')[:5]
@@ -37,20 +41,34 @@ def about(request):
 def add_trade(request):
     #user = request.user
     form = TradeForm()
+    PictureFormSet = modelformset_factory(Pictures,
+                                        form=PictureForm, extra=3)
 
     if request.method == 'POST':
         form = TradeForm(request.POST, request.FILES)
+        formset = PictureFormSet(request.POST, request.FILES,
+                               queryset=Pictures.objects.none())
 
-        if form.is_valid():
-            trade = form.save(commit=True)
+
+        if form.is_valid() and formset.is_valid():
+            trade = form.save(commit = False)
             trade.user = request.user
-            #trade.user = user
             trade.save()
+
+            for forms in formset.cleaned_data:
+                #this helps to not crash if the user
+                #do not upload all the photos
+                if forms:
+                    picture = forms['picture']
+                    image = Pictures(trade=trade, picture=picture)
+                    image.save()
             return redirect('quickswap:trade', trade.slug)
         else:
-            print(form.errors)
-
-    return render(request, 'quickswap/add_trade.html', {'form': form})
+            print(form.errors, formset.errors)
+    else:
+        form = TradeForm()
+        formset = PictureFormSet(queryset=Pictures.objects.none())
+    return render(request, 'quickswap/add_trade.html', {'form': form, 'formset': formset})
 
 
 @login_required
@@ -140,6 +158,9 @@ class ProfileView(View):
 
         return render(request,'quickswap/user.html', context_dict)
 
+
+
+
 class TradeView(View):
 
     def get_Trade_Details(self, trade_name_slug):
@@ -149,31 +170,30 @@ class TradeView(View):
             return None
 
         comments = Comment.objects.filter(trade = trade)
+        pictures = Pictures.objects.filter(trade = trade)
         form = CommentForm()
 
-        return(trade, comments, form)
+        return(trade, comments, pictures, form)
 
     def get(self, request, trade_name_slug):
         try:
-            (trade, comments, form) = self.get_Trade_Details(trade_name_slug)
+            (trade, comments, pictures, form) = self.get_Trade_Details(trade_name_slug)
         except TypeError:
             return redirect(reverse('quickswap:home'))
 
         context_dict = {'selected_trade':trade,
         'comment_list': comments,
+        'picture_list': pictures,
         'comment_form': form}
 
         return render(request, 'quickswap/trade.html', context_dict)
 
     @method_decorator(login_required)
     def post(self, request, trade_name_slug):
-        print('!!!', trade_name_slug)
         try:
-            (trade, comments, form) = self.get_Trade_Details(trade_name_slug)
+            (trade, comments, pictures , form) = self.get_Trade_Details(trade_name_slug)
         except TypeError:
             return redirect(reverse('quickswap:home'))
-
-        print(trade, comments, form)
 
         form = CommentForm(request.POST, request.FILES)
 
@@ -191,12 +211,14 @@ class TradeView(View):
 
         context_dict = {'selected_trade':trade,
         'comment_list': comments,
+        'picture_list': pictures,
         'comment_form': form}
 
         return render(request, 'quickswap/trade.html', context_dict)
 
 
 class UserTradesView(View):
+
     @method_decorator(login_required)
     def get(self, request, username):
         try:
@@ -204,9 +226,22 @@ class UserTradesView(View):
         except TypeError:
             return redirect(reverse('quickswap:home'))
 
-        return render(request,
-                'quickswap/usertrades.html',
-                {'selected_user': user, 'trade_list': Trade.objects.filter(user = user)})
+
+        trades = Trade.objects.filter(user = user)
+
+        #This prevents a referenced before assignment error from dict
+        dict = {}
+        if trades.count() != 0:
+            for trade in trades:
+                dict[trade.slug] =  (Pictures.objects.filter(trade = trade).first()).picture
+            return render(request,
+                    'quickswap/usertrades.html',
+                    {'selected_user': user, 'trade_list': trades,'pictures':dict })
+
+        else:
+            return render(request,
+                    'quickswap/usertrades.html',
+                    {'selected_user': user, 'trade_list': trades})
 
     def get_user(self, username):
         try:
@@ -218,18 +253,23 @@ class UserTradesView(View):
 
 class CategoryView(View):
     def get(self, request, category_name):
-        print('!!!', category_name)
+
+        trades = Trade.objects.filter(category = category_name.lower())
+
+        dict = {}
+        if trades.count() != 0:
+            for trade in trades:
+                dict[trade.slug] =  (Pictures.objects.filter(trade = trade).first()).picture
         return render(request,
                 'quickswap/category.html',
-                {'selected_category': category_name, 'trade_list': Trade.objects.filter(category = category_name.lower())})
+                {'selected_category': category_name,
+                'trade_list': trades, 'pictures': dict})
 
 
 class CategoriesView(View):
-
     def get(self, request):
         categories = {}
         categories = dict(Trade.CATEGORY_CHOICES).values()
-
 
         print('!!!', categories)
         return render(request,
@@ -250,19 +290,19 @@ class AllTradesView(View):
     @method_decorator(login_required)
     def get(self, request):
         trades = Trade.objects.all()
-
+        dict = {}
+        if trades.count() != 0:
+            for trade in trades:
+                dict[trade.slug] =  (Pictures.objects.filter(trade = trade).first()).picture
         return render(request,
                 'quickswap/alltrades.html',
-                {'trade_list': trades})
-
+                {'trade_list': trades, 'pictures': dict})
 
 
 class ContactUsView(View):
     def get(self, request):
-
         return render(request, 'quickswap/contactus.html',)
 
 class HelpdeskView(View):
     def get(self, request):
-
         return render(request, 'quickswap/helpdesk.html',)

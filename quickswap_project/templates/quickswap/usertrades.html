@@ -1,5 +1,7 @@
 {% extends 'quickswap/home.html' %}
+{% load quickswap_template_tags %}
 {% load staticfiles %}
+
 
 {% block title_block %}
   {{ user.username }}'s trades.
@@ -24,9 +26,9 @@
         {% for list_trade in trade_list %}
           <div class="list-group-item">
             <h4 class="list-group-item-heading">
-              <img src="{{ MEDIA_URL }}{{ list_trade.picture }}"
-              width="48"
-              height="48"/>
+                <img src="{{ MEDIA_URL }}{{ pictures|getDictValue:list_trade.slug }}"
+                width="48"
+                height="48"/>
               <a href="{% url 'quickswap:trade' list_trade.slug %}">
                 {{ list_trade.name }}
               </a>

@@ -15,10 +15,20 @@
 
 <div class="container">
   <div class="row">
-    <img src="{{ MEDIA_URL }}{{ selected_trade.picture }}"
-    width="300"
-    height="300"
-    alt="Picture of {{ selected_trade.name }}"/>
+    {% if picture_list %}
+    <div class="panel-body">
+      <div class="list-group">
+        {% for list_picture in picture_list %}
+          <img src="{{ MEDIA_URL }}{{ list_picture.picture }}"
+          width="300"
+          height="300"
+          alt="Picture of {{ selected_trade.name }}"/>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+      Something went wrong getting the trades picture(s), if problem persists contact support.
+    {% endif %}
     <br />
     <div>
       <p>
@@ -45,10 +55,26 @@
                 width="48"
                 height="48"
                 />
-                <a href="{% url 'quickswap:user' list_comment.user.username %}">
-                  {{ list_comment.user.username }}
-                </a> :
+
+                {% if list_comment.user == request.user %}
+                  <a href="{% url 'quickswap:user' list_comment.user.username %}">
+                    {{ list_comment.user.username }}
+                  </a>
+                  - You:
+                {% else %}
+                  <a href="{% url 'quickswap:user' list_comment.user.username %}">
+                    {{ list_comment.user.username }}
+                  </a>
+                  {% if list_comment.user == selected_trade.user %}
+                    - Trade Owner:
+                  {% endif %}
+                  {% if list_comment.user.is_superuser %}
+                    - Admin:
+                  {% endif %}
+                  :
+                {% endif %}
                 {% if list_comment.picture %}
+                <br />
                 <img src="{{ MEDIA_URL }}{{ list_comment.picture }}"
                 width="100"
                 height="100"

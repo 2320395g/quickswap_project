@@ -13,6 +13,9 @@
       <h1 class="jumbotron-heading"> Your Profile </h1>
     {% else %}
       <h1 class="jumbotron-heading">{{ selected_user.username }}'s Profile</h1>
+      {% if list_comment.user.is_superuser %}
+        - Admin
+      {% endif %}
     {% endif %}
   </div>
 </div>
@@ -25,10 +28,10 @@
     alt="{{ selected_user.username }}'s profile image"/>
     <br />
       <div>
-        <p>Date Joined:
+        <p>     Date Joined:
         <br />  {{ user.date_joined|date:"D - d/m/Y" }}
         <br />  {{ user.date_joined|timesince }} ago.
-        <br />Last Login:
+        <br />  Last Login:
         <br />  {{ user.last_login|date:"D - d/m/Y" }}
         <br />  {{ user.last_login|timesince }} ago.
       </div>

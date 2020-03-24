@@ -12,11 +12,17 @@
         <h1 class="jumbotron-heading">Add a Trade</h1>
     </div>
 </div>
+
+
 <div class="container">
     <div class="row">
         <form role="form" id="trade_form" method="post" action="{% url 'quickswap:add_trade' %}" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form | crispy }}
+            {{ formset.management_form }}
+            {% for form in formset %}
+                {{ form }}
+            {% endfor %}
             <br />
             <button class="btn btn-primary" type="submit" name="submit">Add Trade</button>
             <div class="p-5"></div>

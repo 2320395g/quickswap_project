@@ -141,3 +141,5 @@ MEDIA_URL = '/media/'
 
 # Crispy
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+GDAL_LIBRARY_PATH = 'C:/Users/Griff/Anaconda3/envs/rango/Lib/site-packages/GDAL-3.0.4-py3.7-win-amd64.egg-info'
