@@ -51,8 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'quickswap',
     'crispy_forms',
+    'mapbox_location_field',
 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -141,3 +143,6 @@ MEDIA_URL = '/media/'
 
 # Crispy
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#Maps
+MAPBOX_KEY = 'pk.eyJ1IjoiMjMyMDM5NWciLCJhIjoiY2s4Mmt6MDAyMGZlNTNkcDVzM3Myc3lqaSJ9.5vm9EOUBBsxdxON964mOSg'

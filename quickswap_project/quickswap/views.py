@@ -28,9 +28,6 @@ def home(request):
     context_dict = {}
     context_dict['most_commented'] = trades_by_comments
     context_dict['most_recent'] = trades_by_newest
-
-    print(trades_by_comments)
-
     visitor_cookie_handler(request)
 
     return render(request, 'quickswap/home.html', context=context_dict)
@@ -213,9 +210,7 @@ class TradeView(View):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.user = request.user
-            print(request.user.id)
             comment.trade = trade
-            print(trade)
             form.save()
             return redirect('quickswap:trade', trade_name_slug)
         else:
@@ -288,7 +283,6 @@ class CategoriesView(View):
         categories = {}
         categories = dict(Trade.CATEGORY_CHOICES).values()
 
-        print('!!!', categories)
         return render(request,
                 'quickswap/categories.html',
                 {'categories_list': categories})

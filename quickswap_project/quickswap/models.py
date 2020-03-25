@@ -3,6 +3,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.safestring import mark_safe
+from mapbox_location_field.models import LocationField
 
 
 class Category(models.Model):
@@ -66,6 +67,7 @@ class Trade(models.Model):
     quality = models.CharField(max_length = 48, choices = QUALITY_CHOICES)
     description = models.TextField(blank = False)
     suggested_trade = models.CharField(max_length = 128, blank = False)
+    location = LocationField(map_attrs={"center": [-4.28992174937531, 55.872480052801336]})
     slug = models.SlugField()
     date_made = models.DateField(auto_now = True)
 
