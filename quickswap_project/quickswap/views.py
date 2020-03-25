@@ -14,13 +14,18 @@ from django.views.generic.edit import DeleteView
 from django.forms import modelformset_factory
 from django.contrib import messages
 from django.db.models import Count
+import datetime
 
 def home(request):
-    trades_by_comments = Trade.objects.annotate(num_comments=Count('comment')).order_by('-num_comments')[:5]
+    #Used to filter most commented trade by those made in last week, otherwise older
+    #trqdes with large amounts of comments ehos item has already been traded may
+    #remain on the front page despite being of no interest
+    date = datetime.date.today() - datetime.timedelta(days=7)
+    trades_by_comments = Trade.objects.filter(date_made__gte=date).annotate(
+            num_comments=Count('comment')).order_by('-num_comments')[:5]
     trades_by_newest = Trade.objects.order_by('-date_made')[:5]
 
     context_dict = {}
-    context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['most_commented'] = trades_by_comments
     context_dict['most_recent'] = trades_by_newest
 
@@ -90,12 +95,12 @@ def get_server_side_cookie(request, cookie, default_val=None):
 
 def visitor_cookie_handler(request):
     visits = int(get_server_side_cookie(request, 'visits', '1'))
-    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
-    last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.datetime.now()))
+    last_visit_time = datetime.datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
 
-    if (datetime.now() - last_visit_time).days > 0:
+    if (datetime.datetime.now() - last_visit_time).days > 0:
         visits = visits + 1
-        request.session['last_visit'] = str(datetime.now())
+        request.session['last_visit'] = str(datetime.datetime.now())
     else:
         request.session['last_visit'] = last_visit_cookie
 
