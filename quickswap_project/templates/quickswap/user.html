@@ -10,7 +10,7 @@
 <div class="jumbotron p-4">
   <div class="container">
     {% if selected_user == user %}
-      <h1 class="jumbotron-heading"> Your Profile </h1>
+      <h1 class="jumbotron-heading"> Your profile </h1>
     {% else %}
       <h1 class="jumbotron-heading">{{ selected_user.username }}'s Profile</h1>
       {% if list_comment.user.is_superuser %}
@@ -31,9 +31,13 @@
         <p>     Date Joined:
         <br />  {{ user.date_joined|date:"D - d/m/Y" }}
         <br />  {{ user.date_joined|timesince }} ago.
+        <br />
         <br />  Last Login:
         <br />  {{ user.last_login|date:"D - d/m/Y" }}
         <br />  {{ user.last_login|timesince }} ago.
+        <br />
+        <br />  Trades made: {{ user_profile.trades_made }}
+        </p>
       </div>
     <div>
       {% if selected_user == user %}
@@ -48,9 +52,11 @@
         <br />
         <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">My Trades</a>
       {% else %}
-        <p>
-          Description: {{ user_profile.description }}
-        </p>
+        {% if description %}
+          <p>
+            Description: {{ user_profile.description }}
+          </p>
+        {% endif %}
         <br />
         <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">Their Trades</a>
       {% endif %}

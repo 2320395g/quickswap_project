@@ -101,6 +101,7 @@ class Comment(models.Model):
      picture = models.ImageField(blank = True, upload_to='comment_images')
      date_made = models.DateTimeField(auto_now_add=True)
 
+
      class Meta:
         ordering = ['date_made']
 
@@ -111,6 +112,9 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=256, blank = True)
     picture = models.ImageField(upload_to='profile_images', blank = True, default = 'profile_images/default/default_profile_picture.png')
+    #A model is used to hole the number of trades rather than a query,
+    #as a trade may be deleted at some point, making the number inaccurate.
+    trades_made = models.IntegerField(default = 0)
 
     def __str__(self):
         return self.user.username

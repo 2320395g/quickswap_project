@@ -22,17 +22,21 @@
           <div class="list-group-item">
             <h4 class="list-group-item-heading">
               {% with user=list_trade.user.username %}
-              <img src="{{ MEDIA_URL }}{{ pictures|getDictValue:list_trade }}"
-              width="48"
-              height="48"/>
-              <a href="{% url 'quickswap:trade' list_trade.slug %}">
-                {{ list_trade.name }}
-              </a>
-               - Author:
-              <a href="{% url 'quickswap:user' list_trade.user.username %}">
-                {{ user }}
-              </a>
-              - Comments: {{ comment_num|getDictValue:list_trade }}
+                <img src="{{ MEDIA_URL }}{{ pictures|getDictValue:list_trade }}"
+                width="48"
+                height="48"/>
+                <a href="{% url 'quickswap:trade' list_trade.slug %}">
+                  {{ list_trade.name }}
+                </a>
+                 - Category:
+                 <a href="{% url 'quickswap:category' list_trade.category %}">
+                   {{ list_trade.category|capfirst }}
+                 </a>
+                 - Author:
+                <a href="{% url 'quickswap:user' list_trade.user.username %}">
+                  {{ user }}
+                </a>
+                - Comments: {{ comment_num|getDictValue:list_trade }}
               {% endwith %}
             </h4>
           </div>

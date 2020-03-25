@@ -3,14 +3,14 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Category - {{ selected_category }}
+    Category - {{ selected_category|capfirst }}
 {% endblock %}
 
 {% block body_block %}
 <div class="jumbotron p-4">
   <div class="container">
     {% if selected_category %}
-      <h1 class="jumbotron-heading">{{ selected_category }}</h1>
+      <h1 class="jumbotron-heading">{{ selected_category|capfirst }}</h1>
     {% else %}
       <h1 class="jumbotron-heading">The category does not exist! Please try again, or if error persists, contact support. </h1>
     {% endif %}

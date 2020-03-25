@@ -13,16 +13,18 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import DeleteView
 from django.forms import modelformset_factory
 from django.contrib import messages
-
+from django.db.models import Count
 
 def home(request):
-    category_list = Category.objects.order_by('-likes')[:5]
-    page_list = Page.objects.order_by('-views')[:5]
+    trades_by_comments = Trade.objects.annotate(num_comments=Count('comment')).order_by('-num_comments')[:5]
+    trades_by_newest = Trade.objects.order_by('-date_made')[:5]
 
     context_dict = {}
     context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
-    context_dict['categories'] = category_list
-    context_dict['pages'] = page_list
+    context_dict['most_commented'] = trades_by_comments
+    context_dict['most_recent'] = trades_by_newest
+
+    print(trades_by_comments)
 
     visitor_cookie_handler(request)
 
@@ -54,6 +56,11 @@ def add_trade(request):
             trade.user = request.user
             trade.save()
 
+            user = UserProfile.objects.get_or_create(user=request.user)[0]
+            user.trades_made += 1
+            user.save()
+
+
             for forms in formset.cleaned_data:
                 #this helps to not crash if the user
                 #do not upload all the photos
@@ -61,6 +68,7 @@ def add_trade(request):
                     picture = forms['picture']
                     image = Pictures(trade=trade, picture=picture)
                     image.save()
+
             return redirect('quickswap:trade', trade.slug)
         else:
             print(form.errors, formset.errors)

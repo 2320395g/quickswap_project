@@ -1,6 +1,7 @@
 {% extends 'quickswap/base.html' %}
 {% load staticfiles %}
 
+
 {% block title_block %}
     Homepage
 {% endblock %}
@@ -29,13 +30,16 @@
         <div class="col-md-6">
             <div class="card mb-6">
                 <div class="card-body">
-                    <h2>Most Liked Categories</h2>
+                    <h2>Most Commented Trades</h2>
                     <p class="card-text">
-                    {% if categories %}
-                    <ul class="list-group">
-                    </ul>
+                    {% if most_commented %}
+                      <ul class="list-group">
+                        {% for trade in most_commented %}
+                          <a href="{% url 'quickswap:trade' trade.slug %}">{{ trade.name }}</a>
+                        {% endfor %}
+                      </ul>
                     {% else %}
-                    <strong>There are no categories present.</strong>
+                      <strong>Quickswap has no trades.</strong>
                     {% endif %}
                     </p>
                 </div>
@@ -45,13 +49,13 @@
         <div class="col-md-6">
             <div class="card mb-6">
                 <div class="card-body">
-                    <h2>Most Viewed Pages</h2>
+                    <h2>Most Recent Trades</h2>
                     <p class="card-text">
-                    {% if pages %}
+                    {% if most_recent %}
                     <ul class="list-group">
-                    {% for page in pages %}
-                        <li class="list-group-item"><a href="{{ page.url }}">{{ page.title }}</a></li class="list-group-item">
-                    {% endfor %}
+                      {% for trade in most_recent %}
+                          <a href="{% url 'quickswap:trade' trade.slug %}">{{ trade.name }}</a>
+                      {% endfor %}
                     </ul>
                     {% else %}
                     <strong>There are no pages present.</strong>

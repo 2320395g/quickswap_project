@@ -32,6 +32,10 @@
               <a href="{% url 'quickswap:trade' list_trade.slug %}">
                 {{ list_trade.name }}
               </a>
+              - Category:
+              <a href="{% url 'quickswap:category' list_trade.category %}">
+                {{ list_trade.category|capfirst }}
+              </a>
               - Comments: {{ comment_num|getDictValue:list_trade }}
             </h4>
           </div>

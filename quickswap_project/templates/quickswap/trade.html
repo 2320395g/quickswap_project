@@ -37,7 +37,7 @@
         {{ selected_trade.user.username }}
         </a> <br />
         Category: <a href="{% url 'quickswap:category' selected_trade.category %}">
-        {{ selected_trade.category }}
+        {{ selected_trade.category|capfirst }}
         </a> <br />
         Quality: {{ selected_trade.quality }} <br />
         Description: {{ selected_trade.description }} <br />
