@@ -2,6 +2,11 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 
+{% block scripts/styles_block %}
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+{% endblock %}
+
 {% block title_block %}
     Trade for {{ selected_trade.name }}.
 {% endblock %}
@@ -41,9 +46,25 @@
         </a> <br />
         Quality: {{ selected_trade.quality }} <br />
         Description: {{ selected_trade.description }} <br />
-        Suggested Trade: {{ selected_trade.suggested_trade }}
-
+        Suggested Trade: {{ selected_trade.suggested_trade }} <br />
       </p>
+      <div id='map' style='width: 400px; height: 300px;'></div>
+      <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiMjMyMDM5NWciLCJhIjoiY2s4Mmt6MDAyMGZlNTNkcDVzM3Myc3lqaSJ9.5vm9EOUBBsxdxON964mOSg';
+        var map = new mapboxgl.Map({
+          container: 'map',
+          center: [{{ location1 }}, {{ location2 }}],
+          style: 'mapbox://styles/mapbox/streets-v11',
+          zoom: 13
+        });
+        var marker = new mapboxgl.Marker({
+          draggable: false,
+          color: '#FF0000'
+        })
+          .setLngLat([{{ location1 }}, {{ location2 }}])
+          .addTo(map);
+        map.addControl(new mapboxgl.NavigationControl());
+      </script>
     </div>
 
     <div class="container">

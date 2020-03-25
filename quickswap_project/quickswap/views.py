@@ -193,7 +193,10 @@ class TradeView(View):
         context_dict = {'selected_trade':trade,
         'comment_list': comments,
         'picture_list': pictures,
-        'comment_form': form}
+        'comment_form': form,
+        'location1': trade.location[0],
+        'location2': trade.location[1],
+        }
 
         return render(request, 'quickswap/trade.html', context_dict)
 
@@ -219,7 +222,10 @@ class TradeView(View):
         context_dict = {'selected_trade':trade,
         'comment_list': comments,
         'picture_list': pictures,
-        'comment_form': form}
+        'comment_form': form,
+        'location1': trade.location[0],
+        'location2': trade.location[1],
+        }
 
         return render(request, 'quickswap/trade.html', context_dict)
 
