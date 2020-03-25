@@ -21,6 +21,7 @@
         {% for list_trade in trade_list %}
           <div class="list-group-item">
             <h4 class="list-group-item-heading">
+              {% with user=list_trade.user.username %}
               <img src="{{ MEDIA_URL }}{{ pictures|getDictValue:list_trade }}"
               width="48"
               height="48"/>
@@ -29,9 +30,10 @@
               </a>
                - Author:
               <a href="{% url 'quickswap:user' list_trade.user.username %}">
-                {{ list_trade.user.username }}
+                {{ user }}
               </a>
               - Comments: {{ comment_num|getDictValue:list_trade }}
+              {% endwith %}
             </h4>
           </div>
         {% endfor %}

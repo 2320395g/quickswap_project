@@ -2,6 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 
 class Category(models.Model):
@@ -82,6 +83,16 @@ class Pictures(models.Model):
     #Need this otherwise it just adds an 's' in admin and displays it as Picturess
     class Meta:
         verbose_name_plural = "Pictures"
+
+    #these are mark safe as otherwise it wont display the image, instead the html
+    def admin_image(self):
+        return mark_safe('<img src="%s" />' % self.picture.url)
+    admin_image.short_description = "Picture Display"
+
+    def admin_thumbnail(self):
+        return mark_safe('<img src="%s" width="48" height="48" />' % self.picture.url)
+    admin_thumbnail.short_description = "Picture"
+
 
 class Comment(models.Model):
      trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default = None)
