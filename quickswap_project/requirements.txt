@@ -4,4 +4,3 @@ django-crispy-forms==1.9.0
 Pillow==5.4.1
 bcrypt==3.1.7
 django-mapbox-location-field==1.4.0
-django-location-field==2.1.0
