@@ -37,7 +37,7 @@ class Trade(models.Model):
     suggested_trade = models.CharField(max_length = 128, blank = False)
     location = LocationField(map_attrs={"center": [-4.28992174937531, 55.872480052801336]})
     slug = models.SlugField()
-    date_made = models.DateField(auto_now = True)
+    date_made = models.DateTimeField(auto_now = True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
