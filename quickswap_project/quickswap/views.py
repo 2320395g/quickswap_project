@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from quickswap.models import Category, Page, Trade, Comment, Pictures
-from quickswap.forms import CategoryForm, PageForm, UserForm, UserProfileForm, TradeForm, CommentForm, PictureForm
+from quickswap.models import Trade, Comment, Pictures
+from quickswap.forms import UserForm, UserProfileForm, TradeForm, CommentForm, PictureForm
 from datetime import datetime
 from django.contrib.auth.models import User
 from quickswap.models import UserProfile
@@ -304,7 +304,6 @@ class AllUsersView(View):
                 {'user_profile_list': profiles})
 
 class AllTradesView(View):
-    @method_decorator(login_required)
     def get(self, request):
         trades = Trade.objects.all()
         picture_dict = {}

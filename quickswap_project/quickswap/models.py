@@ -5,38 +5,6 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 from mapbox_location_field.models import LocationField
 
-
-class Category(models.Model):
-    NAME_MAX_LENGTH = 128
-
-    name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
-    views = models.IntegerField(default=0)
-    likes = models.IntegerField(default=0)
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name_plural = 'Categories'
-
-    def __str__(self):
-        return self.name
-
-class Page(models.Model):
-    TITLE_MAX_LENGTH = 128
-    URL_MAX_LENGTH = 200
-
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    title = models.CharField(max_length=TITLE_MAX_LENGTH)
-    url = models.URLField()
-    views = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.title
-
-
 class Trade(models.Model):
 
     #If you want to include a category with a space in it, you might need to
@@ -114,8 +82,9 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=256, blank = True)
     picture = models.ImageField(upload_to='profile_images', blank = True, default = 'profile_images/default/default_profile_picture.png')
-    #A model is used to hole the number of trades rather than a query,
-    #as a trade may be deleted at some point, making the number inaccurate.
+    #A model is used to hold the number of trades rather than using a query to find
+    #trades associatde with the user, as a trade may be deleted at some point,
+    #making the number inaccurate.
     trades_made = models.IntegerField(default = 0)
 
     def __str__(self):
