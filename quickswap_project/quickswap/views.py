@@ -15,6 +15,7 @@ from django.forms import modelformset_factory
 from django.contrib import messages
 from django.db.models import Count
 import datetime
+from django.utils import timezone
 
 def home(request):
 
@@ -29,7 +30,7 @@ def home(request):
     #Used to filter most commented trade by those made in last week, otherwise older
     #trqdes with large amounts of comments ehos item has already been traded may
     #remain on the front page despite being of no interest
-    date = datetime.date.today() - datetime.timedelta(days=7)
+    date = timezone.now() - datetime.timedelta(days=7)
     trades_by_comments = Trade.objects.filter(date_made__gte=date).annotate(
             num_comments=Count('comment')).order_by('-num_comments')[:4]
     trades_by_newest = Trade.objects.order_by('-date_made')[:5]
