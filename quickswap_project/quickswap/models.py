@@ -57,25 +57,39 @@ class Pictures(models.Model):
     #these are mark safe as otherwise it wont display the image, instead the html
     def admin_image(self):
         return mark_safe('<img src="%s" />' % self.picture.url)
-    admin_image.short_description = "Picture Display"
+    admin_image.short_description = 'Picture Display'
 
     def admin_thumbnail(self):
         return mark_safe('<img src="%s" width="48" height="48" />' % self.picture.url)
-    admin_thumbnail.short_description = "Picture"
+    admin_thumbnail.short_description = 'Picture'
+
+    def admin_user(self):
+        return (self.trade.user)
+    admin_user.short_description = 'User'
+
 
 
 class Comment(models.Model):
-     trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default = None)
-     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-     text = models.TextField()
-     picture = models.ImageField(blank = True, upload_to='comment_images')
-     date_made = models.DateTimeField(auto_now_add=True)
+    trade = models.ForeignKey(Trade, on_delete=models.CASCADE, default = None)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    text = models.TextField()
+    picture = models.ImageField(blank = True, upload_to='comment_images')
+    date_made = models.DateTimeField(auto_now_add=True)
 
-
-     class Meta:
+    class Meta:
         ordering = ['date_made']
 
-     def __str__(self):
+    def admin_thumbnail(self):
+        if self.picture != '':
+            return  mark_safe('<img src="%s" width="48" height="48" />' % self.picture.url)
+    admin_thumbnail.short_description = 'Picture'
+
+    def admin_image(self):
+        if self.picture != '':
+            return  mark_safe('<img src="%s" />' % self.picture.url)
+    admin_image.short_description = 'Picture'
+
+    def s__str__(self):
         return (self.text + ' - ' + self.user.username)
 
 class UserProfile(models.Model):
@@ -86,6 +100,16 @@ class UserProfile(models.Model):
     #trades associatde with the user, as a trade may be deleted at some point,
     #making the number inaccurate.
     trades_made = models.IntegerField(default = 0)
+
+    def admin_thumbnail(self):
+        if self.picture != '':
+            return  mark_safe('<img src="%s" width="48" height="48" />' % self.picture.url)
+    admin_thumbnail.short_description = 'Picture'
+
+    def admin_image(self):
+        if self.picture != '':
+            return  mark_safe('<img src="%s" />' % self.picture.url)
+    admin_image.short_description = 'Picture'
 
     def __str__(self):
         return self.user.username
