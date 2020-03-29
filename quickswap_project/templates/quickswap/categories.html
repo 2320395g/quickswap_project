@@ -1,4 +1,5 @@
 {% extends 'quickswap/home.html' %}
+{% load quickswap_template_tags %}
 {% load staticfiles %}
 
 {% block title_block %}
@@ -23,6 +24,9 @@
               <a href="{% url 'quickswap:category' list_category %}">
                 {{ list_category }}
               </a>
+              <p>
+                - Trades: {{ trade_nums|getDictValue:list_category }}
+              </p>
             </h4>
           </div>
         {% endfor %}

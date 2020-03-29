@@ -288,10 +288,14 @@ class CategoriesView(View):
     def get(self, request):
         categories = {}
         categories = dict(Trade.CATEGORY_CHOICES).values()
+        trade_num = {}
+        for cat in categories:
+            trade_num[cat] = Trade.objects.filter(category = cat.lower()).count()
+
 
         return render(request,
                 'quickswap/categories.html',
-                {'categories_list': categories})
+                {'categories_list': categories, 'trade_nums': trade_num})
 
 
 
