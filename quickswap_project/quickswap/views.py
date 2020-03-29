@@ -17,12 +17,21 @@ from django.db.models import Count
 import datetime
 
 def home(request):
+
+    #This cheeck fixes the use case that a new superuser has logged in and been
+    # redirected to the home page, where an error will occure displaying their profile
+    # picture as a UserProfile object is not created witht the superuser. This checks
+    # the user is logged in by checking their username is not an empty string as it
+    # is with anonymous users, and then creates the user profile if there isn't one
+    # associated with the current user.
+    if request.user.username != '':
+        UserProfile.objects.get_or_create(user = request.user)
     #Used to filter most commented trade by those made in last week, otherwise older
     #trqdes with large amounts of comments ehos item has already been traded may
     #remain on the front page despite being of no interest
     date = datetime.date.today() - datetime.timedelta(days=7)
     trades_by_comments = Trade.objects.filter(date_made__gte=date).annotate(
-            num_comments=Count('comment')).order_by('-num_comments')[:5]
+            num_comments=Count('comment')).order_by('-num_comments')[:4]
     trades_by_newest = Trade.objects.order_by('-date_made')[:5]
 
     context_dict = {}
