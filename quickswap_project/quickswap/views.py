@@ -36,6 +36,27 @@ def home(request):
     trades_by_newest = Trade.objects.order_by('-date_made')[:5]
 
     context_dict = {}
+    comment_dict = {}
+    picture_dict = {}
+    if trades_by_comments.count() != 0:
+        for trade in trades_by_comments:
+            comment_dict[trade] = Comment.objects.filter(trade = trade).count()
+            picture_dict[trade] = (Pictures.objects.filter(trade = trade).first()).picture
+
+    context_dict['pictures'] = picture_dict
+    context_dict['comment_num'] = comment_dict
+
+    comment_dict = {}
+    picture_dict = {}
+    if trades_by_newest.count() != 0:
+        for trade in trades_by_newest:
+            comment_dict[trade] = Comment.objects.filter(trade = trade).count()
+            picture_dict[trade] = (Pictures.objects.filter(trade = trade).first()).picture
+
+    print(picture_dict)
+    context_dict['pictures2'] = picture_dict
+    context_dict['comment_num2'] = comment_dict
+
     context_dict['most_commented'] = trades_by_comments
     context_dict['most_recent'] = trades_by_newest
     visitor_cookie_handler(request)

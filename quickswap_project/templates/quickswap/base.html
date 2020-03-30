@@ -3,8 +3,6 @@
 {% load quickswap_template_tags %}
 <html lang="en">
     <head>
-      {% block scripts/styles_block %}
-      {% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -20,6 +18,9 @@
     <!-- Custom styles for this template -->
     <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
     <!-- <link href="{% static "css/pro.css" %} rel="stylesheet" type="text/css"/> -->
+    <link href="/static/css/base.css" rel="stylesheet" >
+    {% block scripts/styles_block %}
+    {% endblock %}
     </head>
 
     <body>
@@ -51,10 +52,10 @@
             </nav>
         </header>
 
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
 
-                <main role="main" class="col-md-9  ml-sm-auto col-lg-10 px-4">
+                <main role="main" class="col-md-12  ml-sm-auto col-lg-12 px-4">
                     {% block body_block %}{% endblock %}
 
                     <!-- FOOTER -->
