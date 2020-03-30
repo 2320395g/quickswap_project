@@ -32,7 +32,7 @@ def home(request):
     #remain on the front page despite being of no interest
     date = timezone.now() - datetime.timedelta(days=7)
     trades_by_comments = Trade.objects.filter(date_made__gte=date).annotate(
-            num_comments=Count('comment')).order_by('-num_comments')[:4]
+            num_comments=Count('comment')).order_by('-num_comments')[:5]
     trades_by_newest = Trade.objects.order_by('-date_made')[:5]
 
     context_dict = {}

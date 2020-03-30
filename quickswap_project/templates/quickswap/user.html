@@ -52,7 +52,7 @@
         <br />
         <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">My Trades</a>
       {% else %}
-        {% if description %}
+        {% if user_profile.description %}
           <p>
             Description: {{ user_profile.description }}
           </p>
