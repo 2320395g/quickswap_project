@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 {% load quickswap_template_tags %}
+
+
 <html lang="en">
     <head>
       {% block scripts/styles_block %}
@@ -29,10 +31,12 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+				
+				
 
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:home' %}">Home</a></li>
+						<li class="nav-item"><a class="nav-link"href="{% url 'quickswap:search' %}">Search</a></li>
                         {% if user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link"href="{% url 'quickswap:user' user.username %}">My Profile</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:usertrades' user.username %}">My Trades</a></li>
@@ -45,7 +49,7 @@
                         <li class="nav-item"><a class="nav-link"href="{% url 'quickswap:categories' %}">Categories</a></li>
                         <li class="nav-item"><a class="nav-link"href="{% url 'quickswap:allusers' %}">All Users</a></li>
                         <li class="nav-item"><a class="nav-link"href="{% url 'quickswap:alltrades' %}">All Trades</a></li>
-                        <li class="nav-item "><a class="nav-link" href="{% url 'quickswap:about' %}">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:about' %}">About</a></li>
                     </ul>
                 </div>
             </nav>

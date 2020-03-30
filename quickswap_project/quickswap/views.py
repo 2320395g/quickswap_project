@@ -14,6 +14,7 @@ from django.views.generic.edit import DeleteView
 from django.forms import modelformset_factory
 from django.contrib import messages
 from django.db.models import Count
+from quickswap.bing_search import run_query
 import datetime
 from django.utils import timezone
 
@@ -132,6 +133,18 @@ def register_profile(request):
             print(form.errors)
     context_dict = {'form': form}
     return render(request, 'quickswap/profile_registration.html', context_dict)
+	
+#SEARCH BAR
+def search(request):
+	result_list = []
+	
+	if request.method == 'POST': 
+		query = request.POST['query'].strip()
+		if query:
+			# Run our Bing function to get the results list!
+			result_list = run_query(query)
+		
+	return render(request, 'quickswap/search.html', {'result_list': result_list})
 
 
 class ProfileView(View):

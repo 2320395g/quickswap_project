@@ -18,4 +18,5 @@ urlpatterns = [
     path('trade/<slug:trade_name_slug>', views.TradeView.as_view(), name='trade'),
     path('usertrades/<username>/', views.UserTradesView.as_view(), name='usertrades'),
     path('categories/', views.CategoriesView.as_view(), name='categories'),
+	path('search/', views.search, name='search'),
 ]
