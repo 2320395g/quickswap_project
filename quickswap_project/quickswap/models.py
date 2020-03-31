@@ -100,6 +100,7 @@ class UserProfile(models.Model):
     #trades associatde with the user, as a trade may be deleted at some point,
     #making the number inaccurate.
     trades_made = models.IntegerField(default = 0)
+    comments_made = models.IntegerField(default = 0)
 
     def admin_thumbnail(self):
         if self.picture != '':

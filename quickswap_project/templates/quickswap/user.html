@@ -9,14 +9,16 @@
 {% block body_block %}
 <div class="jumbotron p-4">
   <div class="container">
-    {% if selected_user == user %}
-      <h1 class="jumbotron-heading"> Your profile </h1>
-    {% else %}
-      <h1 class="jumbotron-heading">{{ selected_user.username }}'s Profile</h1>
-      {% if list_comment.user.is_superuser %}
-        - Admin
+    <h1 class="jumbotron-heading">
+      {% if selected_user == user %}
+         Your profile
+      {% else %}
+        {{ selected_user.username }}'s Profile
+        {% if selected_user.is_superuser %}
+          - Admin
+        {% endif %}
       {% endif %}
-    {% endif %}
+    </h1>
   </div>
 </div>
 
@@ -28,15 +30,17 @@
     alt="{{ selected_user.username }}'s profile image"/>
     <br />
       <div>
-        <p>     Date Joined:
-        <br />  {{ user.date_joined|date:"D - d/m/Y" }}
-        <br />  {{ user.date_joined|timesince }} ago.
-        <br />
-        <br />  Last Login:
-        <br />  {{ user.last_login|date:"D - d/m/Y" }}
-        <br />  {{ user.last_login|timesince }} ago.
-        <br />
-        <br />  Trades made: {{ user_profile.trades_made }}
+        <p>
+          Date Joined: <br />
+          {{ user.date_joined|date:"D - d/m/Y" }} <br />
+          {{ user.date_joined|timesince }} ago. <br />
+          <br />
+          Last Login: <br />
+          {{ user.last_login|date:"D - d/m/Y" }} <br />
+          {{ user.last_login|timesince }} ago. <br />
+          <br />
+          Trades made: {{ user_profile.trades_made }} <br />
+          Comments made: {{ user_profile.comments_made }}
         </p>
       </div>
     <div>

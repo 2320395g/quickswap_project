@@ -22,22 +22,24 @@
           <div class="list-group-item">
             <h4 class="list-group-item-heading">
               {% with user=list_trade.user.username %}
-                <img src="{{ MEDIA_URL }}{{ pictures|getDictValue:list_trade }}"
-                alt="Trade Picture"
-                width="48"
-                height="48">
-                <a href="{% url 'quickswap:trade' list_trade.slug %}">
-                  {{ list_trade.name }}
-                </a>
-                 <p> - Category:</p>
-                 <a href="{% url 'quickswap:category' list_trade.category %}">
-                   {{ list_trade.category|capfirst }}
-                 </a>
-                 - Author:
-                <a href="{% url 'quickswap:user' list_trade.user.username %}">
-                  {{ user }}
-                </a>
-                - Comments: {{ comment_num|getDictValue:list_trade }}
+                <p>
+                  <img src="{{ MEDIA_URL }}{{ pictures|getDictValue:list_trade }}"
+                  alt="Trade Picture"
+                  width="48"
+                  height="48">
+                  <a href="{% url 'quickswap:trade' list_trade.slug %}">
+                    {{ list_trade.name }}
+                  </a>
+                  - Category:
+                  <a href="{% url 'quickswap:category' list_trade.category %}">
+                    {{ list_trade.category|capfirst }}
+                  </a>
+                  - Author:
+                  <a href="{% url 'quickswap:user' list_trade.user.username %}">
+                    {{ user }}
+                  </a>
+                  - Comments: {{ comment_num|getDictValue:list_trade }}
+                </p>
               {% endwith %}
             </h4>
           </div>
@@ -45,7 +47,7 @@
       </div>
     </div>
     {% else %}
-    <p>Quickswap has no available trades :( </p>
+      <h5>Quickswap has no available trades <img src="{% static 'images/frown.svg' %}"></h5>
     {% endif %}
   </div>
 </div>

@@ -21,10 +21,10 @@
         {% for list_category in categories_list %}
           <div class="list-group-item">
             <h4 class="list-group-item-heading">
+              <p>
               <a href="{% url 'quickswap:category' list_category %}">
                 {{ list_category }}
               </a>
-              <p>
                 - Trades: {{ trade_nums|getDictValue:list_category }}
               </p>
             </h4>
@@ -33,7 +33,7 @@
       </div>
     </div>
     {% else %}
-      <p>Quickswap seems to have no categories, please contact support.</p>
+      <h5>Quickswap seems to have no categories, please contact support.</h5>
     {% endif %}
   </div>
 </div>

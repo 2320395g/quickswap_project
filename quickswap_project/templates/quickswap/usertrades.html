@@ -43,7 +43,10 @@
       </div>
     </div>
     {% else %}
-      <p>You have not made any trades :( </p>
+      <h4>
+        You have not made any trades. <img src="{% static 'images/frown.svg' %}"> <br/>
+        <a href="{% url 'quickswap:add_trade' %}">Why don't you make one now?</a>
+      </h4>
     {% endif %}
   </div>
 </div>

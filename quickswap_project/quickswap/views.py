@@ -246,6 +246,10 @@ class TradeView(View):
             comment.user = request.user
             comment.trade = trade
             form.save()
+
+            user = UserProfile.objects.get_or_create(user=request.user)[0]
+            user.comments_made += 1
+            user.save()
             return redirect('quickswap:trade', trade_name_slug)
         else:
             print(form.errors)
