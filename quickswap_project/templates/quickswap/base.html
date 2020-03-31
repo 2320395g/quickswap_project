@@ -39,9 +39,10 @@
                         <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:home' %}">Home</a></li>
                         {% if user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link"href="{% url 'quickswap:user' user.username %}">My Profile
-                            <img src="{{ MEDIA_URL }}{{ user.userprofile.picture }}"
+                            <img class="img-fluid rounded-circle" src="{{ MEDIA_URL }}{{ user.userprofile.picture }}"
                                width="24"
-                               height="24">
+                               height="24"
+                               alt="">
                            </a>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:usertrades' user.username %}">My Trades</a></li>
