@@ -11,13 +11,6 @@
     <div class="container">
       {% if user.is_authenticated %}
         <h1 class="jumbotron-heading">Hello {{ user.username }}! Ready to trade?</h1>
-        <div>
-
-            <img src="{{ MEDIA_URL }}{{ user.userprofile.picture }}"
-                 width="200"
-                 height="200"
-                 alt="{{ user.username }}'s profile image"/>
-        </div>
       {% else %}
           <h1 class="jumbotron-heading">  Welcome to Quickswap!</h1>
       {% endif %}
@@ -32,7 +25,7 @@
                 <div class="carousel-title">
                   <h3>Most Commented Trades</h3>
                 </div>
-                <div id="carouselMostCommented" class="carousel slide carousel-fade" data-ride="carousel" style="max-width: 300px; margin: 0 auto">
+                <div id="carouselMostCommented" class="carousel slide carousel-fade" data-ride="carousel" style="max-width: 450px; margin: 0 auto">
                   <ol class="carousel-indicators">
                     <li data-target="#carouselMostCommented" data-slide-to="0" class="active"></li>
                     <li data-target="#carouselMostCommented" data-slide-to="1"></li>
@@ -46,8 +39,8 @@
                       <a href="{% url 'quickswap:trade' trade.slug %}">
                         <img class="d-block w-100 " src="{{ MEDIA_URL }}{{ pictures|getDictValue:trade }}"
                         alt="{{ trade }}}"
-                        width="300"
-                        height="300">
+                        width="400"
+                        height="400">
                         <div class="carousel-caption d-none d-md-block">
                           <h4>{{ trade }}</h4>
                           <p>Comments: {{ comment_num|getDictValue:trade }}
@@ -66,10 +59,14 @@
                     <span class="sr-only">Next</span>
                   </a>
                 </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-6">
                 <div class="carousel-title">
                   <h3>Most Recent Trades</h3>
                 </div>
-                <div id="carouselMostRecent" class="carousel slide carousel-fade" data-ride="carousel" style="max-width: 300px; margin: 0 auto">
+                <div id="carouselMostRecent" class="carousel slide carousel-fade" data-ride="carousel" style="max-width: 450px; margin: 0 auto">
                   <ol class="carousel-indicators">
                     <li data-target="#carouselMostRecent" data-slide-to="0" class="active"></li>
                     <li data-target="#carouselMostRecent" data-slide-to="1"></li>
@@ -83,8 +80,8 @@
                       <a href="{% url 'quickswap:trade' trade.slug %}">
                         <img class="d-block w-100 " src="{{ MEDIA_URL }}{{ pictures2|getDictValue:trade }}"
                         alt="{{ trade }}"
-                        width="300"
-                        height="300">
+                        width="400"
+                        height="400">
                         <div class="carousel-caption d-none d-md-block">
                           <h4>{{ trade }}</h4>
                           <p>Comments: {{ comment_num2|getDictValue:trade }}
