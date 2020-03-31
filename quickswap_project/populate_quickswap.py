@@ -5,6 +5,7 @@ import django
 django.setup()
 from django.contrib.auth.models import User
 from quickswap.models import Trade, Pictures, Comment, UserProfile
+from django.utils import timezone
 
 def populate():
 
@@ -192,21 +193,24 @@ def populate():
             ]
 
 
-
+    print('Populating Users...')
     for u in users:
         add_user(u['username'], u['email'])
 
+    print('Populating UserProfiles...')
     for up in userprofiles:
         add_userprofile(up['user'], up['description'], up['picture'])
 
+    print('Populating Trades...')
     for t in trades:
         add_trade(t['user'],t['name'],t['category'],t['quality'],
                 t['description'],t['suggested_trade'], t['location'])
 
+    print('Populating Pictures...')
     for p in pictures:
         add_picture(p['trade'], p['picture'])
 
-
+    print('Populating Comments...')
     for c in comments:
         if len(c) == 4:
             add_comment_pic(c['trade'],c['user'],c['text'], c['picture'])
@@ -214,7 +218,7 @@ def populate():
             add_comment_nopic(c['trade'],c['user'],c['text'])
 
 def add_user(username, email):
-    u = User.objects.get_or_create(username = username, email = email)
+    u = User.objects.get_or_create(username = username, email = email, last_login = timezone.now())
     return u
 
 def add_userprofile(user, description, picture):
@@ -246,3 +250,4 @@ def add_comment_nopic(trade, user, text):
 if __name__ == '__main__':
     print('Starting quickswap population script...')
     populate()
+    print('Done!')

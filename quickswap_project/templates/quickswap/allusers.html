@@ -33,7 +33,10 @@
       </div>
     </div>
     {% else %}
-      <h5>Quickswap has no registered users <img src="{% static 'images/frown.svg' %}"></h5>
+      <h5>
+        Quickswap has no registered users. <img src="{% static 'images/frown.svg' %}"> <br />
+        <a href="{% url 'registration_register' %}">Why don't you make an account?</a>
+      </h5>
     {% endif %}
   </div>
 </div>

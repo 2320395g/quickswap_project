@@ -32,15 +32,15 @@
       <div>
         <p>
           Date Joined: <br />
-          {{ user.date_joined|date:"D - d/m/Y" }} <br />
-          {{ user.date_joined|timesince }} ago. <br />
+          {{ selected_user.date_joined|date:"D - d/m/Y" }} <br />
+          {{ selected_user.date_joined|timesince }} ago. <br />
           <br />
-          Last Login: <br />
-          {{ user.last_login|date:"D - d/m/Y" }} <br />
-          {{ user.last_login|timesince }} ago. <br />
+          Last Login:   {{ selected_user.last_login }}<br />
+          {{ selected_user.last_login|date:"D - d/m/Y" }} <br />
+          {{ selected_user.last_login|timesince }} ago. <br />
           <br />
           Trades made: {{ user_profile.trades_made }} <br />
-          Comments made: {{ user_profile.comments_made }}
+          Comments made: {{ user_profile.comments_made }} <br />
         </p>
       </div>
     <div>

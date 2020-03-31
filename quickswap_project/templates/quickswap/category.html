@@ -44,7 +44,10 @@
       </div>
     </div>
     {% else %}
-      <h5>This category has no associated trades, why don't you make one?</h5>
+      <h5>
+        This category has no trades. <img src="{% static 'images/frown.svg' %}"> <br />
+        <a href="{% url 'quickswap:add_trade' %}">Why don't you make one now?</a>
+      </h5>
     {% endif %}
   </div>
 </div>

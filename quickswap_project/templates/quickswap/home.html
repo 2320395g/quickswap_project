@@ -18,6 +18,7 @@
     </div>
 </div>
 
+{% if most_recent and most_commented %}
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -104,5 +105,11 @@
         </div>
     </div>
 </div>
+{% else %}
+  <h5>
+    There don't seem to be any trades to display. Try refreshing the page! <br />
+    If this problem persists please contact support.
+  </h5>
+{% endif %}
 
 {% endblock %}
