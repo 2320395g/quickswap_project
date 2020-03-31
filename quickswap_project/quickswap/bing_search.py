@@ -41,7 +41,7 @@ def run_query(search_terms):
 	http://bit.ly/twd-bing-api
 	"""
 	bing_key = read_bing_key()
-	search_url = 'https://quickswap-bing-search.cognitiveservices.azure.com/bing/v7.0' #old url: 'https://api.cognitive.microsoft.com/bing/v7.0/search'
+	search_url = 'https://api.cognitive.microsoft.com/bing/v7.0/search' #possible url (doesn't work tho): 'https://quickswap-bing-search.cognitiveservices.azure.com/bing/v7.0'
 	headers = {'Ocp-Apim-Subscription-Key': bing_key}
 	params = {'q': search_terms, 'textDecorations': True, 'textFormat':' HTML'}
 	

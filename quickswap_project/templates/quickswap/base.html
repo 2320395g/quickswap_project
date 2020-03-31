@@ -5,23 +5,24 @@
 
 <html lang="en">
     <head>
-      {% block scripts/styles_block %}
-      {% endblock %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="generator" content="Jekyll v3.8.5">
-    <link rel="icon" href="{% static 'images/refresh.ico' %}">
-    <title>
-        Quickswap - {% block title_block %} Trade Today! {% endblock %}
-    </title>
+		{% block scripts/styles_block %}
+		{% endblock %}
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="generator" content="Jekyll v3.8.5">
+		<link rel="icon" href="{% static 'images/refresh.ico' %}">
+		<title>
+			Quickswap - {% block title_block %} Trade Today! {% endblock %}
+		</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		<!-- Bootstrap core CSS -->
+		<link href="https://getbootstrap.com/docs/4.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
-    <!-- Custom styles for this template -->
-    <link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
-    <!-- <link href="{% static "css/pro.css" %} rel="stylesheet" type="text/css"/> -->
+		<!-- Custom styles for this template -->
+		<link href="https://getbootstrap.com/docs/4.2/examples/dashboard/dashboard.css" rel="stylesheet">
+		<!-- <link href="{% static "css/pro.css" %} rel="stylesheet" type="text/css"/> -->
+		
     </head>
 
     <body>
@@ -63,8 +64,13 @@
 
                     <!-- FOOTER -->
                     <footer>
-                        <p class="float-right"><a href="#">Back to top</a></p>
-                        <p>&copy; 2020 Quickswap &middot; <a href="{% url 'quickswap:contactus' %}">Contact Us</a> &middot; <a href="{% url 'quickswap:helpdesk' %}">Helpdesk</a>
+						<p class="float-right">
+							<a href="#">Back to top</a>
+						</p>
+						<p>&copy; 2020 Quickswap &middot; 
+							<a href="{% url 'quickswap:contactus' %}">Contact Us</a> &middot; 
+							<a href="{% url 'quickswap:helpdesk' %}">Helpdesk</a>
+						</p>	
                     </footer>
                 </main>
             </div>
