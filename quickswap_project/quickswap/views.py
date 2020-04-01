@@ -19,9 +19,9 @@ from django.utils import timezone
 
 def home(request):
 
-    #This cheeck fixes the use case that a new superuser has logged in and been
-    # redirected to the home page, where an error will occure displaying their profile
-    # picture as a UserProfile object is not created witht the superuser. This checks
+    #This check fixes the use case that a new superuser has logged in and been
+    # redirected to the home page, where an error will occur displaying their profile
+    # picture as a UserProfile object is not created with the superuser. This checks
     # the user is logged in by checking their username is not an empty string as it
     # is with anonymous users, and then creates the user profile if there isn't one
     # associated with the current user.
@@ -59,17 +59,12 @@ def home(request):
 
     context_dict['most_commented'] = trades_by_comments
     context_dict['most_recent'] = trades_by_newest
-    visitor_cookie_handler(request)
 
     return render(request, 'quickswap/home.html', context=context_dict)
 
 def about(request):
-    # Spoiler: now you DO need a context dictionary!
-    context_dict = {}
-    visitor_cookie_handler(request)
-    context_dict['visits'] = request.session['visits']
 
-    return render(request, 'quickswap/about.html', context=context_dict)
+    return render(request, 'quickswap/about.html')
 
 
 @login_required
@@ -109,32 +104,6 @@ def add_trade(request):
         form = TradeForm()
         formset = PictureFormSet(queryset=Pictures.objects.none())
     return render(request, 'quickswap/add_trade.html', {'form': form, 'formset': formset})
-
-
-@login_required
-def restricted(request):
-    return render(request, 'quickswap/restricted.html')
-
-def get_server_side_cookie(request, cookie, default_val=None):
-    val = request.session.get(cookie)
-    if not val:
-        val = default_val
-    return val
-
-def visitor_cookie_handler(request):
-    visits = int(get_server_side_cookie(request, 'visits', '1'))
-    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.datetime.now()))
-    last_visit_time = datetime.datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
-
-    if (datetime.datetime.now() - last_visit_time).days > 0:
-        visits = visits + 1
-        request.session['last_visit'] = str(datetime.datetime.now())
-    else:
-        request.session['last_visit'] = last_visit_cookie
-
-    request.session['visits'] = visits
-
-
 
 @login_required
 def register_profile(request):

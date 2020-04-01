@@ -43,10 +43,16 @@
       </div>
     </div>
     {% else %}
-      <h4>
-        You have not made any trades. <img src="{% static 'images/frown.svg' %}"> <br/>
-        <a href="{% url 'quickswap:add_trade' %}">Why don't you make one now?</a>
-      </h4>
+      {% if selected_user == user %}
+        <h4>
+          You have not made any trades. <img src="{% static 'images/frown.svg' %}"> <br/>
+          <a href="{% url 'quickswap:add_trade' %}">Why don't you make one now?</a>
+        </h4>
+        {% else %}
+          <h4>
+            This user has not made any trades yet. <img src="{% static 'images/frown.svg' %}">
+          </h4>
+        {% endif %}
     {% endif %}
   </div>
 </div>

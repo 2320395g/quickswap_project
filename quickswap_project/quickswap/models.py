@@ -89,7 +89,7 @@ class Comment(models.Model):
             return  mark_safe('<img src="%s" />' % self.picture.url)
     admin_image.short_description = 'Picture'
 
-    def s__str__(self):
+    def __str__(self):
         return (self.text + ' - ' + self.user.username)
 
 class UserProfile(models.Model):

@@ -7,7 +7,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('category/<category_name>/', views.CategoryView.as_view(), name='category'),
-    path('restricted/', views.restricted, name='restricted'),
     path('register_profile/', views.register_profile, name='register_profile'),
     path('user/<username>/', views.ProfileView.as_view(), name='user'),
     path('allusers/', views.AllUsersView.as_view(), name='allusers'),
