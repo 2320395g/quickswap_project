@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
 from quickswap.models import Trade, Pictures, Comment, UserProfile
+from quickswap.views import UserTradesView
 from quickswap_project.urls import MyRegistrationView
 from quickswap.templatetags import quickswap_template_tags
 from django.test import Client
@@ -158,6 +159,11 @@ class ViewTest(TestCase):
         user.save()
         return user
 
+    def create_userprofile(self, user, description = 'testDescription', picture = 'userprofile_test_image.jpg',
+                trades_made = 13, comments_made = 37):
+        return UserProfile.objects.create(user = user, description = description, picture = picture,
+                trades_made = trades_made, comments_made = comments_made)
+
     def create_picture(self, trade, picture = 'test_image.jpg'):
         return Pictures.objects.create(picture = picture, trade = trade)
 
@@ -226,6 +232,7 @@ class ViewTest(TestCase):
         self.assertTemplateUsed(response, 'quickswap/add_trade.html','quickswap/base.html')
         self.assertContains(response, 'New Trade')
 
+
     def test_register_profile_view(self):
         c = Client()
         response = c.get(reverse('quickswap:register_profile'))
@@ -237,6 +244,12 @@ class ViewTest(TestCase):
         self.assertTemplateUsed(response, 'quickswap/profile_registration.html','quickswap/base.html')
         self.assertContains(response, 'Almost done...')
 
+    def test_register_profile_form(self):
+        c = Client()
+        self.create_user()
+        self.assertTrue(c.login(username = 'testUser', password = 'testPassword'))
+        response = c.post(reverse('quickswap:register_profile'))
+        self.assertRedirects(response, '/quickswap/', 302, 200)
 
     def test_user_view_redirects(self):
         c = Client()
@@ -264,6 +277,13 @@ class ViewTest(TestCase):
         response = c.get(reverse('quickswap:user', args=['otherTestUser']))
         self.assertContains(response, 's Profile')
 
+    def test_user_view_post(self):
+        c = Client()
+        user = self.create_user()
+        self.assertTrue(c.login(username = 'testUser', password = 'testPassword'))
+        response = c.post(reverse('quickswap:user', args=['testUser']))
+        self.assertRedirects(response, '/quickswap/user/testUser/', 302, 200)
+
     def test_trade_view(self):
         c = Client()
         response = c.get(reverse('quickswap:trade', args=['test-trade']))
@@ -275,12 +295,23 @@ class ViewTest(TestCase):
         self.assertTemplateUsed(response, 'quickswap/trade.html','quickswap/base.html')
         self.assertContains(response, 'Suggested Trade')
 
-    def test_user_trade_view(self):
+    def test_trade_view_post(self):
+        c = Client()
+        user = self.create_user()
+        trade = self.create_trade(user)
+        self.create_picture(trade)
+        self.assertTrue(c.login(username = 'testUser', password = 'testPassword'))
+        response = c.post(reverse('quickswap:trade', args=['testTrade']))
+        self.assertRedirects(response, '/quickswap/', 302, 200)
+
+    def test_user_trade_view_is_current_user(self):
         c = Client()
         response = c.get(reverse('quickswap:usertrades', args=['testUser']))
         self.assertRedirects(response, '/accounts/login/?next=/quickswap/usertrades/testUser/', 302, 200)
         user = self.create_user()
         self.assertTrue(c.login(username = 'testUser', password = 'testPassword'))
+        response = c.get(reverse('quickswap:user', args=['nonExistingUser']))
+        self.assertRedirects(response, '/quickswap/', 302, 200)
         response = c.get(reverse('quickswap:usertrades', args=['testUser']))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'quickswap/usertrades.html','quickswap/base.html')
@@ -289,3 +320,70 @@ class ViewTest(TestCase):
         self.create_picture(trade)
         response = c.get(reverse('quickswap:usertrades', args=['testUser']))
         self.assertContains(response, 'test Trade')
+
+
+    def test_user__trades_view_user_does_not_exist(self):
+        c = Client()
+        user = self.create_user()
+        self.assertTrue(c.login(username = 'testUser', password = 'testPassword'))
+        self.assertRaises(User.DoesNotExist, UserTradesView.get_user(self, 'nonExistingUser'))
+        response = c.get(reverse('quickswap:usertrades', args=['nonExistingUser']))
+        self.assertRedirects(response, '/quickswap/', 302, 200)
+        print(response)
+
+
+    def test_category_view(self):
+        c = Client()
+        response = c.get(reverse('quickswap:category', args=['art']))
+        self.assertContains(response, 'This category has no trades.')
+        user = self.create_user()
+        trade = self.create_trade(user)
+        self.create_picture(trade)
+        response = c.get(reverse('quickswap:category', args=['art']))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'quickswap/category.html','quickswap/base.html')
+        self.assertContains(response, 'test Trade')
+
+    def test_categories_view(self):
+        c = Client()
+        response = c.get(reverse('quickswap:categories'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'quickswap/categories.html','quickswap/base.html')
+        self.assertContains(response, 'Electronics')
+
+    def test_allusers_view(self):
+        c = Client()
+        response = c.get(reverse('quickswap:allusers'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'quickswap/allusers.html','quickswap/base.html')
+        self.assertContains(response, 'Quickswap has no registered users')
+        user = self.create_user()
+        self.create_userprofile(user)
+        response = c.get(reverse('quickswap:allusers'))
+        self.assertContains(response, 'testUser')
+
+    def test_alltrades_view(self):
+        c = Client()
+        response = c.get(reverse('quickswap:alltrades'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'quickswap/alltrades.html','quickswap/base.html')
+        self.assertContains(response, 'Quickswap has no available trades')
+        user = self.create_user()
+        trade = self.create_trade(user)
+        self.create_picture(trade)
+        response = c.get(reverse('quickswap:alltrades'))
+        self.assertContains(response, 'test Trade')
+
+    def test_contact_us_view(self):
+        c = Client()
+        response = c.get(reverse('quickswap:contactus'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'quickswap/contactus.html','quickswap/base.html')
+        self.assertContains(response, 'Get In Touch')
+
+    def test_helpdesk_view(self):
+        c = Client()
+        response = c.get(reverse('quickswap:helpdesk'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'quickswap/helpdesk.html','quickswap/base.html')
+        self.assertContains(response, 'Having Trouble?')
