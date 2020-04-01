@@ -3,8 +3,16 @@
 {% load crispy_forms_tags %}
 
 {% block scripts/styles_block %}
-  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
-  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+	<script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+	<link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style type="text/css">
+
+		i {
+			color: black;
+		}
+
+	</style>
 {% endblock %}
 
 {% block title_block %}
@@ -15,6 +23,12 @@
 <div class="jumbotron p-4">
   <div class="container">
     <h1 class="jumbotron-heading">{{ selected_trade.name }}</h1>
+	{% if selected_trade.user == user %}
+		<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil" style="color:black;"></i></a> 
+	{% else %}
+		<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
+		<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
+	{% endif %}
   </div>
 </div>
 

@@ -64,12 +64,17 @@
 		
 		<!-- actual properties of the cards -->
 		
+		.card_title {
+			font-size: 22px;
+		}
+		
+		.trade_name {}
+		
 		p {
 			text-overflow: ellipsis;
 			overflow: hidden; 
 			white-space: nowrap; 
 			color: gray;
-			font-size: 18px;
 			maxlength: 100ch;
 		}
 		
@@ -83,7 +88,6 @@
 		
 		a {
 			text-decoration: none;
-			<!-- font-size: 22px; -->
 			color: black;
 		}
 		
@@ -120,20 +124,18 @@
 									<div class="card">
 										<img src="{{ MEDIA_URL }}{{ pictures|getDictValue:trade }}" alt="{{ trade.name }}" style="width:100%;height:50%">
 										<div class="container">
-											<h5>
-												<a href="{% url 'quickswap:trade' trade.slug %}" style="color:black"> {{ trade.name }}  </a> 
-											</h5>
-											<div style="margin: 10px 0;">
+											<h5 class="card_title">
+												<a class="trade_name" href="{% url 'quickswap:trade' trade.slug %}" > {{ trade.name }}  </a> 
 												{% if selected_user == user %}
-													<a href="{% url 'quickswap:edit_trade' trade.slug %}"><i class="fa fa-pencil"></i></a> 
+													<a href="{% url 'quickswap:edit_trade' trade.slug %}"><i class="fa fa-pencil" style="color:black;"></i></a> 
 												{% else %}
 													<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
 													<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
 												{% endif %}
-											</div>
-											<!-- <p style="color:gray;">
-												{{ trade.date_mate }}        How does one make a dateField into a text?
-												</p> -->
+											</h5>
+											<p style="color:gray;">
+												{{ trade.date_made|date:"jS F, Y" }}
+											</p>
 											<p class="overflow-ellipsis">
 												{{ trade.description }}
 											</p>
