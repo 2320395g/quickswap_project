@@ -119,7 +119,8 @@ def register_profile(request):
 
             return redirect(reverse('quickswap:home'))
         else:
-            print(form.errors)
+            #context_dict['errors'] = form.errors
+            print('An error occured:', form.errors)
     context_dict = {'form': form}
     return render(request, 'quickswap/profile_registration.html', context_dict)
 
@@ -305,7 +306,7 @@ class TradeView(View):
             user.save()
             return redirect('quickswap:trade', trade_name_slug)
         else:
-            print(form.errors)
+            print('An error occured:', form.errors)
 
         context_dict = {'selected_trade':trade,
         'comment_list': comments,
@@ -325,9 +326,10 @@ class UserTradesView(View):
 
     @method_decorator(login_required)
     def get(self, request, username):
-        try:
-            user = self.get_user(username)
-        except TypeError:
+
+        user = self.get_user(username)
+
+        if user == None:
             return redirect(reverse('quickswap:home'))
 
 
