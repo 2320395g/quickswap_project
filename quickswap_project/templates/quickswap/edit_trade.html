@@ -1,0 +1,43 @@
+{% extends 'quickswap/base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block scripts/styles_block %}
+  {% load mapbox_location_field_tags %}
+  {% location_field_includes %}
+  {% include_jquery %}
+{% endblock %}
+
+{% block title_block %}
+    Edit a Trade
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+    <div class="container">
+        <h1 class="jumbotron-heading">Edit a Trade</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <form 	role="form" 
+				id="edit_trade_form" 
+				method="post" 
+				action="{% url 'quickswap:edit_trade' selected_trade.slug %}"
+				enctype="multipart/form-data"
+		>
+            {% csrf_token %}
+            {{ form | crispy }}
+            {{ formset.management_form }}
+            {% for form in formset %}
+                {{ form }}
+            {% endfor %}
+            <br />
+            <button class="btn btn-primary" type="submit" name="submit">Save</button>
+            <div class="p-5"></div>
+        </form>
+        {{ form.media }}
+    </div>
+</div>
+{% endblock %}
