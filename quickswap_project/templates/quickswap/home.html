@@ -39,7 +39,7 @@
                     <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
                       <a href="{% url 'quickswap:trade' trade.slug %}">
                         <img class="d-block w-100 " src="{{ MEDIA_URL }}{{ pictures|getDictValue:trade }}"
-                        alt="{{ trade }}}"
+                        alt="{{ trade }}"
                         width="400"
                         height="400">
                         <div class="carousel-caption d-none d-md-block">

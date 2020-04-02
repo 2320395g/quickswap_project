@@ -24,7 +24,7 @@
   <div class="container">
     <h1 class="jumbotron-heading">{{ selected_trade.name }}</h1>
 	{% if selected_trade.user == user %}
-		<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil" style="color:black;"></i></a> 
+		<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil" style="color:black;"></i></a>
 	{% else %}
 		<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
 		<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
@@ -37,12 +37,31 @@
     {% if picture_list %}
     <div class="panel-body">
       <div class="list-group">
-        {% for list_picture in picture_list %}
-          <img src="{{ MEDIA_URL }}{{ list_picture.picture }}"
-          width="300"
-          height="300"
-          alt="Picture of {{ selected_trade.name }}"/>
-        {% endfor %}
+				<div id="carouselTradePictures" class="carousel slide carousel-fade" data-ride="carousel" style="max-width: 450px; margin: 0 auto">
+					<ol class="carousel-indicators">
+						{% for list_picture in picture_list %}
+						<li data-target="#carouselTradePictures" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
+						{% endfor %}
+					</ol>
+					<div class="carousel-inner">
+		        {% for list_picture in picture_list %}
+						<div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+								<img class="d-block w-100 " src="{{ MEDIA_URL }}{{ list_picture.picture }}"
+								alt="{{ trade }}"
+								width="400"
+								height="400">
+						</div>
+						{% endfor %}
+					</div>
+					<a class="carousel-control-prev" href="#carouselTradePictures" role="button" data-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="sr-only">Previous</span>
+					</a>
+					<a class="carousel-control-next" href="#carouselTradePictures" role="button" data-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="sr-only">Next</span>
+					</a>
+				</div>
       </div>
     </div>
     {% else %}
