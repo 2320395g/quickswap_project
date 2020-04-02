@@ -316,7 +316,50 @@ class TradeView(View):
         return render(request, 'quickswap/trade.html', context_dict)
 
 
-
+class SaveTradeView(View):  #When called when the trade is already amid the user's saved trades,
+	#the function removes the view instead of adding it
+	@method_decorator(login_required)
+	def get(self, request):
+		user = request.GET['user']
+		trade_name = request.GET['trade_name']
+		
+		try:
+			trade = Trade.objects.get(name=str(trade_name))
+		except Trade.DoesNotExist: 
+			return HttpResponse(-1)
+		except ValueError:
+			return HttpResponse(-1)
+			
+		#get the user
+		try:
+			user = User.objects.get(username=user)
+		except User.DoesNotExist: 
+			return HttpResponse(-1)
+		except ValueError:
+			return HttpResponse(-1)
+			
+		#get the userProfile object associated to it
+		try:
+			userProfile = UserProfile.objects.get(user=user)
+		except UserProfile.DoesNotExist: 
+			return HttpResponse(-1)
+		except ValueError:
+			return HttpResponse(-1)
+			
+		if (userProfile.saved_trades.filter(name=trade_name).count()==0):  #a trade with that name does not exist
+			userProfile.saved_trades.add(trade)
+			userProfile.save()
+			print("added!")
+			return HttpResponse(1)
+		else:
+			userProfile.saved_trades.remove(trade)
+			userProfile.save()
+			print("removed")
+			return HttpResponse(0)
+		
+		# for st in userProfile.saved_trades.all():
+			# print(st.name)
+		  #trade.saves_count
 
 
 class UserTradesView(View):

@@ -7,44 +7,45 @@ from mapbox_location_field.models import LocationField
 
 class Trade(models.Model):
 
-    #If you want to include a category with a space in it, you might need to
-    #add a slug as one of their values is user as a url.
-    CATEGORY_CHOICES = (
-        ('art','Art'),
-        ('books', 'Books'),
-        ('clothes', 'Clothes'),
-        ('electronics', 'Electronics'),
-        ('furniture', 'Furniture'),
-        ('toys', 'Toys'),
-        ('other', 'Other'),
-    )
-    QUALITY_CHOICES = (
+	#If you want to include a category with a space in it, you might need to
+	#add a slug as one of their values is user as a url.
+	CATEGORY_CHOICES = (
+		('art','Art'),
+		('books', 'Books'),
+		('clothes', 'Clothes'),
+		('electronics', 'Electronics'),
+		('furniture', 'Furniture'),
+		('toys', 'Toys'),
+		('other', 'Other'),
+	)
+	QUALITY_CHOICES = (
         ('new', 'New'),
         ('good','Good'),
         ('fair','Fair'),
         ('slightly-damaged', 'Slightly Damaged'),
         ('battle-scarred', 'Battle Scarred'),
-    )
+	)
 
-    NAME_MAX_LENGTH = 128
+	NAME_MAX_LENGTH = 128
 
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, default = None, on_delete=models.CASCADE)
-    name = models.CharField(max_length = NAME_MAX_LENGTH, unique=True)
-    category = models.CharField(max_length = 48, choices = CATEGORY_CHOICES)
-    quality = models.CharField(max_length = 48, choices = QUALITY_CHOICES)
-    description = models.TextField(blank = False)
-    suggested_trade = models.CharField(max_length = 128, blank = False)
-    location = LocationField(map_attrs={"center": [-4.28992174937531, 55.872480052801336]})
-    slug = models.SlugField()
-    date_made = models.DateTimeField(auto_now = True)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, default = None, on_delete=models.CASCADE)
+	name = models.CharField(max_length = NAME_MAX_LENGTH, unique=True)
+	category = models.CharField(max_length = 48, choices = CATEGORY_CHOICES)
+	quality = models.CharField(max_length = 48, choices = QUALITY_CHOICES)
+	description = models.TextField(blank = False)
+	suggested_trade = models.CharField(max_length = 128, blank = False)
+	location = LocationField(map_attrs={"center": [-4.28992174937531, 55.872480052801336]})
+	slug = models.SlugField()
+	date_made = models.DateTimeField(auto_now = True)
+	#saves_count = models.IntegerField(default= 0 )
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Trade, self).save(*args, **kwargs)
+	def save(self, *args, **kwargs):
+		self.slug = slugify(self.name)
+		super(Trade, self).save(*args, **kwargs)
 
-    def __str__(self):
-        return self.name
+	def __str__(self):
+		return self.name
 
 class Pictures(models.Model):
     trade = models.ForeignKey(Trade,on_delete=models.CASCADE, default=None)
@@ -93,24 +94,25 @@ class Comment(models.Model):
         return (self.text + ' - ' + self.user.username)
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=256, blank = True)
-    picture = models.ImageField(upload_to='profile_images', blank = True, default = 'profile_images/default/default_profile_picture.png')
-    #A model is used to hold the number of trades rather than using a query to find
-    #trades associatde with the user, as a trade may be deleted at some point,
-    #making the number inaccurate.
-    trades_made = models.IntegerField(default = 0)
-    comments_made = models.IntegerField(default = 0)
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	description = models.CharField(max_length=256, blank = True)
+	picture = models.ImageField(upload_to='profile_images', blank = True, default = 'profile_images/default/default_profile_picture.png')
+	#A model is used to hold the number of trades rather than using a query to find
+	#trades associatde with the user, as a trade may be deleted at some point,
+	#making the number inaccurate.
+	trades_made = models.IntegerField(default = 0)
+	comments_made = models.IntegerField(default = 0)
+	saved_trades = models.ManyToManyField(Trade)
 
-    def admin_thumbnail(self):
-        if self.picture != '':
-            return  mark_safe('<img src="%s" width="48" height="48" />' % self.picture.url)
-    admin_thumbnail.short_description = 'Picture'
+	def admin_thumbnail(self):
+		if self.picture != '':
+			return  mark_safe('<img src="%s" width="48" height="48" />' % self.picture.url)
+	admin_thumbnail.short_description = 'Picture'	
+	
+	def admin_image(self):
+		if self.picture != '':
+			return  mark_safe('<img src="%s" />' % self.picture.url)
+	admin_image.short_description = 'Picture'
 
-    def admin_image(self):
-        if self.picture != '':
-            return  mark_safe('<img src="%s" />' % self.picture.url)
-    admin_image.short_description = 'Picture'
-
-    def __str__(self):
-        return self.user.username
+	def __str__(self):
+		return self.user.username

@@ -16,12 +16,20 @@
 <div class="jumbotron p-4">
   <div class="container">
     <h1 class="jumbotron-heading wrap-text">{{ selected_trade.name }}</h1>
-	{% if selected_trade.user == user %}
-		<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil pencil-colour"></i></a>
-	{% else %}
-		<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
-		<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
-	{% endif %}
+	<div>
+		<strong id="saves_count">{{ selected_trade.saves_count }}</strong> saves
+		{% if user.is_authenticated %}
+			{% if selected_trade.user == user %}
+				<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil pencil-colour"></i></a>
+			{% else %}
+				<button id="save"
+						data-tradeName="{{ selected_trade.name }}"
+						data-user="{{ user }}"
+						type="button"
+				><i class="fa fa-heart"></i></button>
+			{% endif %}
+		{% endif %}
+	</div>
   </div>
 </div>
 

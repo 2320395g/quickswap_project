@@ -16,6 +16,7 @@ urlpatterns = [
     path('alltrades/', views.AllTradesView.as_view(), name='alltrades'),
     path('trade/<slug:trade_name_slug>', views.TradeView.as_view(), name='trade'),
     path('edit_trade/<slug:trade_name_slug>/', views.EditTradeView.as_view(), name='edit_trade'), 
+	path('save_trade/', views.SaveTradeView.as_view(), name='save_trade'),
     path('usertrades/<username>/', views.UserTradesView.as_view(), name='usertrades'),
     path('categories/', views.CategoriesView.as_view(), name='categories'),
 ]

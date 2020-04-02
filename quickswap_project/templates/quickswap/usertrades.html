@@ -40,7 +40,7 @@
 										{% if selected_user == user %}
 											<a href="{% url 'quickswap:edit_trade' trade.slug %}"><i class="fa fa-pencil pencil-colour"></i></a>
 										{% else %}
-											<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
+											<button class="icon_button" id="save_button"><i class="fa fa-heart"></i></button>
 											<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
 										{% endif %}
 									</h5>
@@ -53,23 +53,21 @@
 									<p>
 										I'm looking for: {{ trade.suggested_trade }}
 									</p>
-
 									{% if selected_user != user %}
-										<p><button class="disabled">Offer trade</button></p>
+										<p><button class="disabled offer_trade_button" >Offer trade</button></p>
 									{% endif %}
 								</div>
-									</div>
 							</div>
-						{% endfor %}
+						</div>
+					{% endfor %}
 				{% else %}
-        <h5>
-          You have not made any trades yet <img src="{% static 'images/frown.svg' %}"> <br />
-          <a href="{% url 'quickswap:add_trade' %}">Why don't you make one now?</a>
-        </h5>
+					<h5>
+					  You have not made any trades yet <img src="{% static 'images/frown.svg' %}"> <br />
+					  <a href="{% url 'quickswap:add_trade' %}">Why don't you make one now?</a>
+					</h5>
 				{% endif %}
-				
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="{% static "js/save-button.js" %}" crossorigin="anonymous"></script>
+			</div>
+		</div>
 		
 	</body>
 </html>

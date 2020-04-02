@@ -5,4 +5,4 @@ var myVar = setInterval(function() {
 function myTimer() {
   var d = new Date();
   document.getElementById("time").innerHTML = d.toLocaleTimeString();
-}
+};
