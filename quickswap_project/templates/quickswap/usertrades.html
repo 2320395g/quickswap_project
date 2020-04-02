@@ -28,34 +28,36 @@
 		<div class="container">
 			<div class="row">
 				{% if trade_list %}
-						{% for trade in trade_list %}
-							<div class="column">
-									<div class="card">
-										<img class="usertrades-images" src="{{ MEDIA_URL }}{{ pictures|getDictValue:trade }}" alt="{{ trade.name }}">
-										<div class="container">
-											<h5 class="card_title">
-												<a class="trade_name wrap-text" href="{% url 'quickswap:trade' trade.slug %}" > {{ trade.name }}  </a>
-												{% if selected_user == user %}
-													<a href="{% url 'quickswap:edit_trade' trade.slug %}"><i class="fa fa-pencil pencil-colour"></i></a>
-												{% else %}
-													<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
-													<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
-												{% endif %}
-											</h5>
-											<p>
-												{{ trade.date_made|date:"jS F, Y" }}
-											</p>
-											<p class="overflow-ellipsis">
-												{{ trade.description }}
-											</p>
-											<p>
-												I'm looking for: {{ trade.suggested_trade }}
-											</p>
+					{% for trade in trade_list %}
+						<div class="column">
+							<div class="card">
+								<a href="{% url 'quickswap:trade' trade.slug %}">
+									<img class="usertrades-images" src="{{ MEDIA_URL }}{{ pictures|getDictValue:trade }}" alt="{{ trade.name }}">
+								</a>
+								<div class="container">	
+									<h5 class="card_title">
+										<a class="trade_name wrap-text" href="{% url 'quickswap:trade' trade.slug %}" > {{ trade.name }}  </a>
+										{% if selected_user == user %}
+											<a href="{% url 'quickswap:edit_trade' trade.slug %}"><i class="fa fa-pencil pencil-colour"></i></a>
+										{% else %}
+											<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
+											<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
+										{% endif %}
+									</h5>
+									<p>
+										{{ trade.date_made|date:"jS F, Y" }}
+									</p>
+									<p class="overflow-ellipsis">
+										{{ trade.description }}
+									</p>
+									<p>
+										I'm looking for: {{ trade.suggested_trade }}
+									</p>
 
-											{% if selected_user != user %}
-												<p><button class="disabled">Offer trade</button></p>
-											{% endif %}
-										</div>
+									{% if selected_user != user %}
+										<p><button class="disabled">Offer trade</button></p>
+									{% endif %}
+								</div>
 									</div>
 							</div>
 						{% endfor %}
