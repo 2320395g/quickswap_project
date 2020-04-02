@@ -30,7 +30,7 @@ def populate():
             'picture': 'population_images/sunglasses_guy.jpg'},
             {'user': 'burksA',
             'description': 'Looking for cool vintage stuff!',
-            'picture': 'population_images/womanAB.png' },
+            'picture': 'population_images/womanAB.jpg' },
             {'user': 'bigNIK',
             'description': 'I HAVE TOO MUCH STUFF',
             'picture': 'population_images/big_nik.jpg' },
