@@ -6,13 +6,6 @@
 	<script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<style type="text/css">
-
-		i {
-			color: black;
-		}
-
-	</style>
 {% endblock %}
 
 {% block title_block %}
@@ -22,9 +15,9 @@
 {% block body_block %}
 <div class="jumbotron p-4">
   <div class="container">
-    <h1 class="jumbotron-heading">{{ selected_trade.name }}</h1>
+    <h1 class="jumbotron-heading wrap-text">{{ selected_trade.name }}</h1>
 	{% if selected_trade.user == user %}
-		<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil" style="color:black;"></i></a>
+		<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil pencil-colour"></i></a>
 	{% else %}
 		<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
 		<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
@@ -35,75 +28,79 @@
 <div class="container">
   <div class="row">
     {% if picture_list %}
-    <div class="panel-body">
-      <div class="list-group">
-				<div id="carouselTradePictures" class="carousel slide carousel-fade" data-ride="carousel" style="max-width: 450px; margin: 0 auto">
-					<ol class="carousel-indicators">
-						{% for list_picture in picture_list %}
-						<li data-target="#carouselTradePictures" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
-						{% endfor %}
-					</ol>
-					<div class="carousel-inner">
-		        {% for list_picture in picture_list %}
-						<div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
-								<img class="d-block w-100 " src="{{ MEDIA_URL }}{{ list_picture.picture }}"
-								alt="{{ trade }}"
-								width="400"
-								height="400">
-						</div>
-						{% endfor %}
-					</div>
-					<a class="carousel-control-prev" href="#carouselTradePictures" role="button" data-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					</a>
-					<a class="carousel-control-next" href="#carouselTradePictures" role="button" data-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					</a>
-				</div>
-      </div>
+		<!--   carousel    -->
+    <div class="col trade-carousel">
+			<div id="carouselTradePictures" class="carousel slide carousel-fade trade-carousel-images" data-ride="carousel">
+			  <ol class="carousel-indicators">
+			    {% for list_picture in picture_list %}
+			    <li data-target="#carouselTradePictures" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
+			    {% endfor %}
+			  </ol>
+			  <div class="carousel-inner">
+			    {% for list_picture in picture_list %}
+			    <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+			        <img class="d-block w-100 " src="{{ MEDIA_URL }}{{ list_picture.picture }}"
+			        alt="{{ trade }}"
+			        width="400"
+			        height="400">
+			    </div>
+			    {% endfor %}
+			  </div>
+			  <a class="carousel-control-prev" href="#carouselTradePictures" role="button" data-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="sr-only">Previous</span>
+			  </a>
+			  <a class="carousel-control-next" href="#carouselTradePictures" role="button" data-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="sr-only">Next</span>
+			  </a>
+			</div>
+
     </div>
     {% else %}
-      <h5>Something went wrong getting the trades picture(s), if problem persists contact support.</h5>
+			<div class="col">
+	      <h5>Something went wrong getting the trades picture(s), if problem persists contact support.</h5>
+			</div>
     {% endif %}
-    <br />
-    <div>
-      <p>
-        Created On: {{ selected_trade.date_made|date:"jS F, Y" }} <br />
-        Trader : <a href="{% url 'quickswap:user' selected_trade.user.username %}">
-        {{ selected_trade.user.username }}
-        </a> <br />
-        Category: <a href="{% url 'quickswap:category' selected_trade.category %}">
-        {{ selected_trade.category|capfirst }}
-        </a> <br />
-        Quality: {{ selected_trade.quality }} <br />
-        Description: {{ selected_trade.description }} <br />
-        Suggested Trade: {{ selected_trade.suggested_trade }} <br />
-      </p>
-      <div id='map' style='width: 400px; height: 300px;'></div>
-      <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiMjMyMDM5NWciLCJhIjoiY2s4Mmt6MDAyMGZlNTNkcDVzM3Myc3lqaSJ9.5vm9EOUBBsxdxON964mOSg';
-        var map = new mapboxgl.Map({
-          container: 'map',
-          center: [{{ location1 }}, {{ location2 }}],
-          style: 'mapbox://styles/mapbox/streets-v11',
-          zoom: 13
-        });
-        var marker = new mapboxgl.Marker({
-          draggable: false,
-          color: '#FF0000'
-        })
-          .setLngLat([{{ location1 }}, {{ location2 }}])
-          .addTo(map);
-        map.addControl(new mapboxgl.NavigationControl());
-      </script>
+		<div class="col">
+			<div>
+				<p class="trade-info">
+					Created On: {{ selected_trade.date_made|date:"jS F, Y" }} <br />
+					Trader : <a href="{% url 'quickswap:user' selected_trade.user.username %}">
+					{{ selected_trade.user.username }}
+					</a> <br />
+					Category: <a href="{% url 'quickswap:category' selected_trade.category %}">
+					{{ selected_trade.category|capfirst }}
+					</a> <br />
+					Quality: {{ selected_trade.quality|capfirst }} <br />
+					Description: {{ selected_trade.description }} <br />
+					Suggested Trade: {{ selected_trade.suggested_trade }} <br />
+				</p>
+				<div id='map' class="trade-map"></div>
+				<script>
+					mapboxgl.accessToken = 'pk.eyJ1IjoiMjMyMDM5NWciLCJhIjoiY2s4Mmt6MDAyMGZlNTNkcDVzM3Myc3lqaSJ9.5vm9EOUBBsxdxON964mOSg';
+					var map = new mapboxgl.Map({
+						container: 'map',
+						center: [{{ location1 }}, {{ location2 }}],
+						style: 'mapbox://styles/mapbox/streets-v11',
+						zoom: 13
+					});
+					var marker = new mapboxgl.Marker({
+						draggable: false,
+						color: '#FF0000'
+					})
+						.setLngLat([{{ location1 }}, {{ location2 }}])
+						.addTo(map);
+					map.addControl(new mapboxgl.NavigationControl());
+				</script>
+			</div>
     </div>
 
+
     <div class="container">
-      <div class="row">
+      <div class="row trade-comment">
         {% if comment_list %}
-        <div class="panel-body">
+        <div class="col">
           <div class="list-group">
             {% for list_comment in comment_list %}
             <div class="list-group-item">
@@ -132,7 +129,7 @@
                   {% endif %}
                   {{ list_comment.date_made|date:"d/m/y - G:i:s" }}
                 </p>
-                <P>
+                <p class="wrap-text">
                   {% if list_comment.picture %}
 
                     <img src="{{ MEDIA_URL }}{{ list_comment.picture }}"
