@@ -24,46 +24,47 @@
 
 <div class="container">
   <div class="row">
-    <img src="{{ MEDIA_URL }}{{ user_profile.picture }}"
-    width="300"
-    height="300"
-    alt="{{ selected_user.username }}'s profile image"/>
-    <br />
+    <div class="col">
+      <img src="{{ MEDIA_URL }}{{ user_profile.picture }}"
+      width="300"
+      height="300"
+      alt="{{ selected_user.username }}'s profile image"/>
+    </div>
+    <div class="col">
       <div>
-        <p>
-          Date Joined: <br />
-          {{ selected_user.date_joined|date:"D - d/m/Y" }} <br />
-          {{ selected_user.date_joined|timesince }} ago. <br />
-          <br />
-          Last Login:   {{ selected_user.last_login }}<br />
-          {{ selected_user.last_login|date:"D - d/m/Y" }} <br />
-          {{ selected_user.last_login|timesince }} ago. <br />
-          <br />
-          Trades made: {{ user_profile.trades_made }} <br />
-          Comments made: {{ user_profile.comments_made }} <br />
-        </p>
-      </div>
-    <div>
-      {% if selected_user == user %}
-        <form method="post"action="."enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ form | crispy }}
+        {% if selected_user == user %}
+          <form method="post"action="."enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form | crispy }}
 
-          <input class="btn btn-warning" type="submit"value="Update"/>
-        </form>
-        <br />
-        <a class="btn btn-danger" href="{% url 'auth_password_change' %}">Change Password</a>
-        <br />
-        <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">My Trades</a>
-      {% else %}
-        {% if user_profile.description %}
-          <p>
-            Description: {{ user_profile.description }}
-          </p>
+            <input class="btn btn-warning button-margin" type="submit"value="Update"/>
+          </form>
+          <a class="btn btn-primary button-margin" href="{% url 'quickswap:usertrades' selected_user.username %}">My Trades</a> <br />
+          <a class="btn btn-danger button-margin" href="{% url 'auth_password_change' %}">Change Password</a>
+        {% else %}
+          {% if user_profile.description %}
+            <p>
+              Description: {{ user_profile.description }}
+            </p>
+          {% endif %}
+          <br />
+          <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">Their Trades</a>
         {% endif %}
+      </div>
+    </div>
+    <div class="col">
+      <p>
+        Date Joined: <br />
+        {{ selected_user.date_joined|date:"D - d/m/Y" }} <br />
+        {{ selected_user.date_joined|timesince }} ago. <br />
         <br />
-        <a class="btn btn-primary" href="{% url 'quickswap:usertrades' selected_user.username %}">Their Trades</a>
-      {% endif %}
+        Last Login:   {{ selected_user.last_login }}<br />
+        {{ selected_user.last_login|date:"D - d/m/Y" }} <br />
+        {{ selected_user.last_login|timesince }} ago. <br />
+        <br />
+        Trades made: {{ user_profile.trades_made }} <br />
+        Comments made: {{ user_profile.comments_made }} <br />
+      </p>
     </div>
   </div>
 </div>

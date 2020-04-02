@@ -40,6 +40,10 @@ h1 {
   word-wrap:break-word;
 }
 
+.button-margin{
+  margin:5px;
+}
+
 .home-carousel-title{
   margin:auto;
 }
