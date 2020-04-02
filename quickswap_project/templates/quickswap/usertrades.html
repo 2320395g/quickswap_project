@@ -22,7 +22,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<style type="text/css">
-		
+
 		.card {
 			height: 400px;
 			width: 300px;
@@ -32,12 +32,12 @@
 		    margin: auto;
 			text-align: center;
 		}
-		
+
 		html {
 		  --lh: 1.4rem;
 		  line-height: var(--lh);
 		}
-		
+
 		.column {
 			float: left;
 			width: 320px;
@@ -61,23 +61,23 @@
 				margin-bottom: 20px;
 			}
 		}
-		
+
 		<!-- actual properties of the cards -->
-		
+
 		.card_title {
 			font-size: 22px;
 		}
-		
+
 		.trade_name {}
-		
+
 		p {
 			text-overflow: ellipsis;
-			overflow: hidden; 
-			white-space: nowrap; 
+			overflow: hidden;
+			white-space: nowrap;
 			color: gray;
 			maxlength: 100ch;
 		}
-		
+
 		.overflow-ellipsis {
 			--max-lines: 3;
 			position: relative;
@@ -85,12 +85,12 @@
 			overflow: hidden;
 			padding-right: 1rem;
 		}
-		
+
 		a {
 			text-decoration: none;
 			color: black;
 		}
-		
+
 		button {
 			border: none;
 			outline: 0;
@@ -103,7 +103,7 @@
 			width: 100%;
 			font-size: 18px;
 		}
-		
+
 		.card:hover {
 			box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
 		}
@@ -111,10 +111,10 @@
 		button:hover, a:hover {  <!--  but this in the future must be changed as the icons won't be "a"s anymore -->
 			opacity: 0.7;
 		}
-		
+
 		</style>
 	</head>
-	
+
 	<body>
 		<div class="container">
 			<div class="row">
@@ -125,9 +125,9 @@
 										<img src="{{ MEDIA_URL }}{{ pictures|getDictValue:trade }}" alt="{{ trade.name }}" style="width:100%;height:50%">
 										<div class="container">
 											<h5 class="card_title">
-												<a class="trade_name" href="{% url 'quickswap:trade' trade.slug %}" > {{ trade.name }}  </a> 
+												<a class="trade_name" href="{% url 'quickswap:trade' trade.slug %}" > {{ trade.name }}  </a>
 												{% if selected_user == user %}
-													<a href="{% url 'quickswap:edit_trade' trade.slug %}"><i class="fa fa-pencil" style="color:black;"></i></a> 
+													<a href="{% url 'quickswap:edit_trade' trade.slug %}"><i class="fa fa-pencil" style="color:black;"></i></a>
 												{% else %}
 													<a href="#"><i class="fa fa-heart"></i></a>  <!-- this, if clicked, should add the trade to the user favourites -->
 													<a href="#"><i class="fa fa-flag"></i></a>  <!-- this should report the trade -->
@@ -142,7 +142,7 @@
 											<p>
 												I'm looking for: {{ trade.suggested_trade }}
 											</p>
-											
+
 											{% if selected_user != user %}
 												<p><button>Offer trade</button></p>
 											{% endif %}
@@ -151,7 +151,10 @@
 							</div>
 						{% endfor %}
 				{% else %}
-					<p>You have not made any trades :( </p>
+        <h5>
+          You have not made any trades yet <img src="{% static 'images/frown.svg' %}"> <br />
+          <a href="{% url 'quickswap:add_trade' %}">Why don't you make one now?</a>
+        </h5>
 				{% endif %}
 			</div>
 		</div>

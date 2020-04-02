@@ -170,90 +170,87 @@ class ProfileView(View):
 
 
 class EditTradeView(View):
-		
-	def get_Trade_Details(self, trade_name_slug):
-		try:
-			trade = Trade.objects.get(slug=trade_name_slug)
-		except Trade.DoesNotExist:
-			return None
+    def get_Trade_Details(self, trade_name_slug):
+        try:
+            trade = Trade.objects.get(slug=trade_name_slug)
+        except Trade.DoesNotExist:
+            return None
+        pictures = Pictures.objects.filter(trade = trade)
+        return(trade, pictures)
 
-		pictures = Pictures.objects.filter(trade = trade)
 
-		return(trade, pictures)
+    @method_decorator(login_required)
+    def get(self, request, trade_name_slug):
+        try:
+            (trade, pictures) = self.get_Trade_Details(trade_name_slug)
+        except TypeError:
+            return redirect(reverse('quickswap:home'))
 
-	def get(self, request, trade_name_slug):
-		try:
-			(trade, pictures) = self.get_Trade_Details(trade_name_slug)
-		except TypeError:
-			return redirect(reverse('quickswap:home'))
-			
-		form = EditTradeForm(trade=trade)
-		PictureFormSet = modelformset_factory(Pictures, form=PictureForm, extra=5, min_num=1)
-		formset = PictureFormSet(queryset=Pictures.objects.none())
+        form = EditTradeForm(trade=trade)
+        PictureFormSet = modelformset_factory(Pictures, form=PictureForm, extra=5, min_num=1)
+        formset = PictureFormSet(queryset=Pictures.objects.none())
 
-		context_dict = {'selected_trade':trade,
+        context_dict = {'selected_trade':trade,
 						'picture_list': pictures,
 						'location1': trade.location[0],
 						'location2': trade.location[1],
-						'form':form, 
-						'formset': formset
-		}
+						'form':form,
+						'formset': formset}
 
-		return render(request, 'quickswap/edit_trade.html', context_dict)
-		
-	@method_decorator(login_required)	
-	def post(self, request, trade_name_slug):
-		try:
-			(trade, pictures) = self.get_Trade_Details(trade_name_slug)
-		except TypeError:
-			return redirect(reverse('quickswap:home'))
-			
-		PictureFormSet = modelformset_factory(Pictures, form=PictureForm, extra=5, min_num=1)
+        return render(request, 'quickswap/edit_trade.html', context_dict)
 
-		if request.method == 'POST':
-			form = EditTradeForm(request.POST, request.FILES, trade=trade, instance=trade)
-			formset = PictureFormSet(request.POST, request.FILES,
+    @method_decorator(login_required)
+    def post(self, request, trade_name_slug):
+        try:
+            (trade, pictures) = self.get_Trade_Details(trade_name_slug)
+        except TypeError:
+            return redirect(reverse('quickswap:home'))
+
+        PictureFormSet = modelformset_factory(Pictures, form=PictureForm, extra=5, min_num=1)
+
+        if request.method == 'POST':
+            form = EditTradeForm(request.POST, request.FILES, trade=trade, instance=trade)
+            formset = PictureFormSet(request.POST, request.FILES,
 								   queryset=Pictures.objects.none())
-			print(-1)
+            print(-1)
 
-			if form.is_valid() and formset.is_valid():
-				print(0)
-				trade = form.save(commit = False)
-				trade.user = request.user
-				print(1)
-				trade.save()
-				print(2)
+            if form.is_valid() and formset.is_valid():
+                print(0)
+                trade = form.save(commit = False)
+                trade.user = request.user
+                print(1)
+                trade.save()
+                print(2)
 
-				user = UserProfile.objects.get_or_create(user=request.user)[0]
-				user.save()
-				print(3)
+                user = UserProfile.objects.get_or_create(user=request.user)[0]
+                user.save()
+                print(3)
 
 
-				for forms in formset.cleaned_data:
-					#this helps to not crash if the user
-					#do not upload all the photos
-					if forms:
-						picture = forms['picture']
-						image = Pictures(trade=trade, picture=picture)
-						image.save()
+                for forms in formset.cleaned_data:
+                    #this helps to not crash if the user
+                    #do not upload all the photos
+                    if forms:
+                        picture = forms['picture']
+                        image = Pictures(trade=trade, picture=picture)
+                        image.save()
 
-				return redirect('quickswap:trade', trade_name_slug)
-			else:
-				print(form.errors, formset.errors)
-		else:
-			form = EditTradeForm(trade=trade)
-			formset = PictureFormSet(queryset=Pictures.objects.none())
-			
-		context_dict = {'selected_trade':trade,
+                return redirect('quickswap:trade', trade_name_slug)
+            else:
+                print(form.errors, formset.errors)
+        else:
+            form = EditTradeForm(trade=trade)
+            formset = PictureFormSet(queryset=Pictures.objects.none())
+
+        context_dict = {'selected_trade':trade,
 				'picture_list': pictures,
 				'location1': trade.location[0],
 				'location2': trade.location[1],
-				'form':form, 
-				'formset': formset
-        }
-		
-		return render(request, 'quickswap/edit_trade.html', context_dict)
-		
+				'form':form,
+				'formset': formset}
+
+        return render(request, 'quickswap/edit_trade.html', context_dict)
+
 
 class TradeView(View):
 
@@ -317,8 +314,8 @@ class TradeView(View):
         }
 
         return render(request, 'quickswap/trade.html', context_dict)
-		
-		
+
+
 
 
 
