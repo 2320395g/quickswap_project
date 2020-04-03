@@ -18,6 +18,9 @@ html {
   padding-right: 10px; -->
 }
 
+<!-- /* Remove extra left and right margins, due to padding in columns */
+.row {margin: 0 -5px;} -->
+
 /* Clear floats after the columns */
 .row:after {
   height: 100px;
@@ -31,6 +34,8 @@ html {
     margin-bottom: 20px;
   }
 }
+
+<!-- actual properties of the cards -->
 
 .card_title {
   font-size: 22px;
@@ -83,7 +88,7 @@ button {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.4);
 }
 
-button:hover { 
+button:hover {  <!--  but this in the future must be changed as the icons won't be "a"s anymore -->
   opacity: 0.7;
 }
 
@@ -91,16 +96,3 @@ button:hover {
   width:300px;
   height:240px;
 }
-
-.divider {
-	width: 100%;
-	border-bottom-style: solid;
-	border-width: 1px;
-	border-color: gray;
-}
-
-
-
-
-
-

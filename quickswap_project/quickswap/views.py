@@ -126,47 +126,60 @@ def register_profile(request):
 
 
 class ProfileView(View):
-    def get_user_details(self, username):
-        try:
-            user=User.objects.get(username=username)
-        except User.DoesNotExist:
-            return None
+	def get_user_details(self, username):
+		try:
+			user=User.objects.get(username=username)
+		except User.DoesNotExist:
+			return None
 
-        user_profile = UserProfile.objects.get_or_create(user=user)[0]
-        form = UserProfileForm({'description': user_profile.description,'picture': user_profile.picture})
+		user_profile = UserProfile.objects.get_or_create(user=user)[0]
+		form = UserProfileForm({'description': user_profile.description,'picture': user_profile.picture})
 
-        return(user, user_profile, form)
+		return(user, user_profile, form)
 
 
-    @method_decorator(login_required)
-    def get(self, request, username):
-        try:
-            (user, user_profile, form) = self.get_user_details(username)
-        except TypeError:
-            return redirect(reverse('quickswap:home'))
+	@method_decorator(login_required)
+	def get(self, request, username):
+		try:
+			(user, user_profile, form) = self.get_user_details(username)
+		except TypeError:
+			return redirect(reverse('quickswap:home'))
+		
+		trades = Trade.objects.filter(user = user)
 
-        context_dict={'user_profile': user_profile,'selected_user': user,'form': form}
+		#This prevents a referenced before assignment error from dict
+		picture_dict = {}
+		comment_dict = {}
+		if trades.count() != 0:
+			for trade in trades:
+				comment_dict[trade] = Comment.objects.filter(trade = trade).count()
+				picture_dict[trade] =  (Pictures.objects.filter(trade = trade).first()).picture
+		
+			context_dict={'user_profile': user_profile,'selected_user': user,'trade_list': trades,'pictures':picture_dict, 'comment_num':comment_dict, 'form': form}
+		
+		else:
+			context_dict={'user_profile': user_profile,'selected_user': user,'form': form}
+		
+		return render(request,'quickswap/user.html', context_dict)
 
-        return render(request,'quickswap/user.html', context_dict)
+	@method_decorator(login_required)
+	def post(self, request, username):
+		try:
+			(user, user_profile, form) = self.get_user_details(username)
+		except TypeError:
+			return redirect(reverse('quickswap:home'))
 
-    @method_decorator(login_required)
-    def post(self, request, username):
-        try:
-            (user, user_profile, form) = self.get_user_details(username)
-        except TypeError:
-            return redirect(reverse('quickswap:home'))
+		form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
 
-        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+		if form.is_valid():
+			form.save(commit=True)
+			return redirect('quickswap:user', user.username)
+		else:
+			print(form.errors)
 
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect('quickswap:user', user.username)
-        else:
-            print(form.errors)
+		context_dict = {'user_profile': user_profile,'selected_user': user,'form': form}
 
-        context_dict = {'user_profile': user_profile,'selected_user': user,'form': form}
-
-        return render(request,'quickswap/user.html', context_dict)
+		return render(request,'quickswap/user.html', context_dict)
 
 
 class EditTradeView(View):
@@ -357,10 +370,6 @@ class SaveTradeView(View):  #When called when the trade is already amid the user
 			print("removed")
 			return HttpResponse(0)
 		
-		# for st in userProfile.saved_trades.all():
-			# print(st.name)
-		  #trade.saves_count
-
 
 class UserTradesView(View):
 

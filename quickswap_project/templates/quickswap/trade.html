@@ -17,7 +17,6 @@
   <div class="container">
     <h1 class="jumbotron-heading wrap-text">{{ selected_trade.name }}</h1>
 	<div>
-		<strong id="saves_count">{{ selected_trade.saves_count }}</strong> saves
 		{% if user.is_authenticated %}
 			{% if selected_trade.user == user %}
 				<a href="{% url 'quickswap:edit_trade' selected_trade.slug %}"><i class="fa fa-pencil pencil-colour"></i></a>
@@ -33,145 +32,149 @@
   </div>
 </div>
 
-<div class="container">
-  <div class="row">
-    {% if picture_list %}
-		<!--   carousel    -->
-    <div class="col trade-carousel">
-			<div id="carouselTradePictures" class="carousel slide carousel-fade trade-carousel-images" data-ride="carousel">
-			  <ol class="carousel-indicators">
-			    {% for list_picture in picture_list %}
-			    <li data-target="#carouselTradePictures" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
-			    {% endfor %}
-			  </ol>
-			  <div class="carousel-inner">
-			    {% for list_picture in picture_list %}
-			    <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
-			        <img class="d-block w-100 " src="{{ MEDIA_URL }}{{ list_picture.picture }}"
-			        alt="{{ trade }}"
-			        width="400"
-			        height="400">
-			    </div>
-			    {% endfor %}
+<html>
+	<body>
+		<div class="container">
+		  <div class="row">
+			{% if picture_list %}
+				<!--   carousel    -->
+			<div class="col trade-carousel">
+					<div id="carouselTradePictures" class="carousel slide carousel-fade trade-carousel-images" data-ride="carousel">
+					  <ol class="carousel-indicators">
+						{% for list_picture in picture_list %}
+						<li data-target="#carouselTradePictures" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
+						{% endfor %}
+					  </ol>
+					  <div class="carousel-inner">
+						{% for list_picture in picture_list %}
+						<div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+							<img class="d-block w-100 " src="{{ MEDIA_URL }}{{ list_picture.picture }}"
+							alt="{{ trade }}"
+							width="400"
+							height="400">
+						</div>
+						{% endfor %}
+					  </div>
+					  <a class="carousel-control-prev" href="#carouselTradePictures" role="button" data-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="sr-only">Previous</span>
+					  </a>
+					  <a class="carousel-control-next" href="#carouselTradePictures" role="button" data-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="sr-only">Next</span>
+					  </a>
+					</div>
+
+			</div>
+			{% else %}
+					<div class="col">
+				  <h5>Something went wrong getting the trades picture(s), if problem persists contact support.</h5>
+					</div>
+			{% endif %}
+				<div class="col">
+					<div>
+						<p class="trade-info">
+							Created On: {{ selected_trade.date_made|date:"jS F, Y" }} <br />
+							Trader : <a href="{% url 'quickswap:user' selected_trade.user.username %}">
+							{{ selected_trade.user.username }}
+							</a> <br />
+							Category: <a href="{% url 'quickswap:category' selected_trade.category %}">
+							{{ selected_trade.category|capfirst }}
+							</a> <br />
+							Quality: {{ selected_trade.quality|capfirst }} <br />
+							Description: {{ selected_trade.description }} <br />
+							Suggested Trade: {{ selected_trade.suggested_trade }} <br />
+						</p>
+						<div id='map' class="trade-map"></div>
+						<script>
+							mapboxgl.accessToken = 'pk.eyJ1IjoiMjMyMDM5NWciLCJhIjoiY2s4Mmt6MDAyMGZlNTNkcDVzM3Myc3lqaSJ9.5vm9EOUBBsxdxON964mOSg';
+							var map = new mapboxgl.Map({
+								container: 'map',
+								center: [{{ location1 }}, {{ location2 }}],
+								style: 'mapbox://styles/mapbox/streets-v11',
+								zoom: 13
+							});
+							var marker = new mapboxgl.Marker({
+								draggable: false,
+								color: '#FF0000'
+							})
+								.setLngLat([{{ location1 }}, {{ location2 }}])
+								.addTo(map);
+							map.addControl(new mapboxgl.NavigationControl());
+						</script>
+					</div>
+			</div>
+
+
+			<div class="container">
+			  <div class="row trade-comment">
+				{% if comment_list %}
+				<div class="col">
+				  <div class="list-group">
+					{% for list_comment in comment_list %}
+					<div class="list-group-item">
+					  <h4 class="list-group-item-heading">
+						<p>
+						  <img src="{{ MEDIA_URL }}{{ list_comment.user.userprofile.picture }}"
+						  width="48"
+						  height="48"
+						  />
+						  {% if list_comment.user == request.user %}
+							<a href="{% url 'quickswap:user' list_comment.user.username %}">
+							  {{ list_comment.user.username }}
+							</a>
+							- You:
+						  {% else %}
+							<a href="{% url 'quickswap:user' list_comment.user.username %}">
+							  {{ list_comment.user.username }}
+							</a>
+							{% if list_comment.user == selected_trade.user %}
+							  - Trade Owner
+							{% endif %}
+							{% if list_comment.user.is_superuser %}
+							  - Admin
+							{% endif %}
+							:
+						  {% endif %}
+						  {{ list_comment.date_made|date:"d/m/y - G:i:s" }}
+						</p>
+						<p class="wrap-text">
+						  {% if list_comment.picture %}
+
+							<img src="{{ MEDIA_URL }}{{ list_comment.picture }}"
+							width="100"
+							height="100"
+							>
+						  {% endif %}
+						  {{ list_comment.text }}
+						</p>
+					  </h4>
+					</div>
+					{% endfor %}
+				  </div>
+				</div>
+				{% else %}
+				  <p>
+					There are currently no comments on this trade, why don't you make one?
+				  </p>
+				{% endif %}
 			  </div>
-			  <a class="carousel-control-prev" href="#carouselTradePictures" role="button" data-slide="prev">
-			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-			    <span class="sr-only">Previous</span>
-			  </a>
-			  <a class="carousel-control-next" href="#carouselTradePictures" role="button" data-slide="next">
-			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-			    <span class="sr-only">Next</span>
-			  </a>
 			</div>
 
-    </div>
-    {% else %}
-			<div class="col">
-	      <h5>Something went wrong getting the trades picture(s), if problem persists contact support.</h5>
+
+			<div class="container">
+			  <div class="row">
+				<form role="form" id="comment_form" method="post" action="{% url 'quickswap:trade' selected_trade.slug %}" enctype="multipart/form-data">
+				  {% csrf_token %}
+				  {{ comment_form | crispy }}
+				  <br />
+				  <button class="btn btn-primary" type="submit" name="submit">Add Comment</button>
+				  <div class="p-5"></div>
+				</form>
+			  </div>
 			</div>
-    {% endif %}
-		<div class="col">
-			<div>
-				<p class="trade-info">
-					Created On: {{ selected_trade.date_made|date:"jS F, Y" }} <br />
-					Trader : <a href="{% url 'quickswap:user' selected_trade.user.username %}">
-					{{ selected_trade.user.username }}
-					</a> <br />
-					Category: <a href="{% url 'quickswap:category' selected_trade.category %}">
-					{{ selected_trade.category|capfirst }}
-					</a> <br />
-					Quality: {{ selected_trade.quality|capfirst }} <br />
-					Description: {{ selected_trade.description }} <br />
-					Suggested Trade: {{ selected_trade.suggested_trade }} <br />
-				</p>
-				<div id='map' class="trade-map"></div>
-				<script>
-					mapboxgl.accessToken = 'pk.eyJ1IjoiMjMyMDM5NWciLCJhIjoiY2s4Mmt6MDAyMGZlNTNkcDVzM3Myc3lqaSJ9.5vm9EOUBBsxdxON964mOSg';
-					var map = new mapboxgl.Map({
-						container: 'map',
-						center: [{{ location1 }}, {{ location2 }}],
-						style: 'mapbox://styles/mapbox/streets-v11',
-						zoom: 13
-					});
-					var marker = new mapboxgl.Marker({
-						draggable: false,
-						color: '#FF0000'
-					})
-						.setLngLat([{{ location1 }}, {{ location2 }}])
-						.addTo(map);
-					map.addControl(new mapboxgl.NavigationControl());
-				</script>
-			</div>
-    </div>
-
-
-    <div class="container">
-      <div class="row trade-comment">
-        {% if comment_list %}
-        <div class="col">
-          <div class="list-group">
-            {% for list_comment in comment_list %}
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">
-                <p>
-                  <img src="{{ MEDIA_URL }}{{ list_comment.user.userprofile.picture }}"
-                  width="48"
-                  height="48"
-                  />
-                  {% if list_comment.user == request.user %}
-                    <a href="{% url 'quickswap:user' list_comment.user.username %}">
-                      {{ list_comment.user.username }}
-                    </a>
-                    - You:
-                  {% else %}
-                    <a href="{% url 'quickswap:user' list_comment.user.username %}">
-                      {{ list_comment.user.username }}
-                    </a>
-                    {% if list_comment.user == selected_trade.user %}
-                      - Trade Owner
-                    {% endif %}
-                    {% if list_comment.user.is_superuser %}
-                      - Admin
-                    {% endif %}
-                    :
-                  {% endif %}
-                  {{ list_comment.date_made|date:"d/m/y - G:i:s" }}
-                </p>
-                <p class="wrap-text">
-                  {% if list_comment.picture %}
-
-                    <img src="{{ MEDIA_URL }}{{ list_comment.picture }}"
-                    width="100"
-                    height="100"
-                    >
-                  {% endif %}
-                  {{ list_comment.text }}
-                </p>
-              </h4>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        {% else %}
-          <p>
-            There are currently no comments on this trade, why don't you make one?
-          </p>
-        {% endif %}
-      </div>
-    </div>
-
-
-    <div class="container">
-      <div class="row">
-        <form role="form" id="comment_form" method="post" action="{% url 'quickswap:trade' selected_trade.slug %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          {{ comment_form | crispy }}
-          <br />
-          <button class="btn btn-primary" type="submit" name="submit">Add Comment</button>
-          <div class="p-5"></div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+		  </div>
+		</div>
+	</body>
+</html>
 {% endblock %}
