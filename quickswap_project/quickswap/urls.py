@@ -9,6 +9,7 @@ urlpatterns = [
     path('category/<category_name>/', views.CategoryView.as_view(), name='category'),
     path('register_profile/', views.register_profile, name='register_profile'),
     path('user/<username>/', views.ProfileView.as_view(), name='user'),
+    path('saved_trades/', views.SavedTradesView.as_view(), name='saved_trades'),
     path('allusers/', views.AllUsersView.as_view(), name='allusers'),
     path('contactus/', views.ContactUsView.as_view(), name='contactus'),
     path('helpdesk/', views.HelpdeskView.as_view(), name='helpdesk'),

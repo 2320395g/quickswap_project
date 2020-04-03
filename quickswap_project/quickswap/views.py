@@ -407,6 +407,46 @@ class UserTradesView(View):
             return None
 
         return(user)
+		
+class SavedTradesView(View):
+	def get_user_details(self, username):
+		try:
+			user=User.objects.get(username=username)
+		except User.DoesNotExist:
+			return None
+
+		user_profile = UserProfile.objects.get_or_create(user=user)[0]
+
+		return(user, user_profile)
+
+
+	@method_decorator(login_required)
+	def get(self, request):
+		
+		username = request.user
+	
+		try:
+			(user, user_profile) = self.get_user_details(username)
+		except TypeError:
+			return redirect(reverse('quickswap:home'))
+		
+		trades = user_profile.saved_trades.all()
+
+		#This prevents a referenced before assignment error from dict
+		picture_dict = {}
+		comment_dict = {}
+		if trades.count() != 0:
+			for trade in trades:
+				comment_dict[trade] = Comment.objects.filter(trade = trade).count()
+				picture_dict[trade] =  (Pictures.objects.filter(trade = trade).first()).picture
+		
+			context_dict={'selected_user': user,'trade_list': trades,'pictures':picture_dict, 'comment_num':comment_dict}
+		
+		else:
+			context_dict={'selected_user': user}
+		
+		return render(request,'quickswap/saved_trades.html', context_dict)
+
 
 class CategoryView(View):
     def get(self, request, category_name):

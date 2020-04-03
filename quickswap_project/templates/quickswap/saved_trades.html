@@ -1,0 +1,77 @@
+{% extends 'quickswap/home.html' %}
+{% load quickswap_template_tags %}
+{% load staticfiles %}
+
+{% block title_block %}
+  {{ user.username }}'s trades.
+{% endblock %}
+
+{% block body_block %}
+<div class="jumbotron p-4">
+  <div class="container">
+    {% if selected_user == user %}
+      <h1 class="jumbotron-heading"> Your Trades </h1>
+    {% else %}
+      <h1 class="jumbotron-heading">{{ selected_user.username }}'s Trades</h1>
+    {% endif %}
+  </div>
+</div>
+
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link href="/static/css/usertrades.css" rel="stylesheet" >
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="row">
+				{% if trade_list %}
+					{% for trade in trade_list %}
+						<div class="column">
+							<div class="card">
+								<a href="{% url 'quickswap:trade' trade.slug %}">
+									<img class="usertrades-images" src="{{ MEDIA_URL }}{{ pictures|getDictValue:trade }}" alt="{{ trade.name }}">
+								</a>
+								<div class="container">	
+									<h5 class="card_title">
+										<a class="trade_name wrap-text" href="{% url 'quickswap:trade' trade.slug %}" > {{ trade.name }}  </a>
+										<button id="button{{ forloop.counter }}"
+											data-tradeName="{{ trade.name }}"
+											data-user="{{ user }}"
+											type="button"
+										><i class="fa fa-heart"></i></button>
+									</h5>
+									<p>
+										{{ trade.date_made|date:"jS F, Y" }}
+									</p>
+									<p class="overflow-ellipsis">
+										{{ trade.description }}
+									</p>
+									<p>
+										I'm looking for: {{ trade.suggested_trade }}
+									</p>
+									{% if selected_user != user %}
+										<p><button class="disabled offer_trade_button" >Offer trade</button></p>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				{% else %}
+					<h5>
+					  You have not made any trades yet <img src="{% static 'images/frown.svg' %}"> <br />
+					  <a href="{% url 'quickswap:alltrades' %}">Why don't you look for some to add?</a>
+					</h5>
+				{% endif %}
+			</div>
+		</div>
+		
+		<script src="{% static "js/save-button-user-ajax.js" %}" crossorigin="anonymous"></script>
+        <script src="{% static "js/jquery-3.3.1.min.js" %}" crossorigin="anonymous"></script>
+		
+	</body>
+</html>
+
+{% endblock %}

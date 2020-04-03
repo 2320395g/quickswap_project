@@ -46,7 +46,7 @@
                                {% endif %}
                                </a>
                             </li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:usertrades' user.username %}">My Trades</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:saved_trades' %}">Saved Trades</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'quickswap:add_trade' %}">New Trade</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/quickswap/">Logout</a></li>
                         {% else %}
