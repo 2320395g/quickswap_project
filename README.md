@@ -12,7 +12,7 @@ This repository uses a virtual environment with specific packages, therefore it 
 Virtual Environment
 If you haven't already created a virtual environment, you can do using Anaconda.
 
-    $ conda create -n quickswap_project python=3.8.0
+    $ conda create -n quickswap_project python=3.7
     $ conda activate quickswap_project
 Installing packages
 A requirements.txt file mentions all the packages along with their versions used for this project. 
