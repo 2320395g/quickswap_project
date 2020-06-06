@@ -1,4 +1,4 @@
-Django==2.2.10
+Django==2.2.13
 django-registration-redux==2.2
 django-crispy-forms==1.9.0
 Pillow==5.4.1
